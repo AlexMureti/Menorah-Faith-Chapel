@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "Menorah-Faith-Chapel/src/*"
+        "./src/*"
       ]
     },
     /* Bundler mode */
@@ -35,6 +35,6 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "Menorah-Faith-Chapel/src"
+    "./src"
   ]
 }

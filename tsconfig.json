@@ -12,7 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "Menorah-Faith-Chapel/src/*"
+        "./src/*"
       ]
     }
   }
