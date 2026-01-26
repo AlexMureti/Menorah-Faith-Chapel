@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { ArrowRight, Play, Zap } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Play, Zap, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface HeroProps {
   currentLang: string;
@@ -107,8 +107,18 @@ const content = {
   },
 };
 
+const slideShowMedia = [
+  { type: 'image', src: '/slideshow/photo-1.jpeg', alt: 'Slide 1' },
+  { type: 'video', src: '/slideshow/menorahs.mp4', alt: 'Menorahs' },
+  { type: 'image', src: '/slideshow/photo-2.jpeg', alt: 'Slide 2' },
+  { type: 'video', src: '/slideshow/theme-video.mp4', alt: 'Theme' },
+];
+
 export default function Hero({ currentLang }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -129,238 +139,260 @@ export default function Hero({ currentLang }: HeroProps) {
     return () => observer.disconnect();
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.querySelector(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  // Set playback speed for menorahs video
+  useEffect(() => {
+    const video = videoRefs.current[1]; // menorahs.mp4 is at index 1
+    if (video) {
+      video.playbackRate = 0.5; // Half speed
     }
+  }, []);
+
+  // Auto-advance slideshow every 6 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slideShowMedia.length);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index % slideShowMedia.length);
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slideShowMedia.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slideShowMedia.length) % slideShowMedia.length);
   };
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen bg-gradient-to-br from-secondary/30 via-white to-secondary/20 overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.015]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #002060 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }} />
-      </div>
-
-      {/* Subtle World Map Overlay */}
-      <div className="absolute right-0 top-0 w-1/2 h-full opacity-[0.03] pointer-events-none">
-        <svg viewBox="0 0 1000 500" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-          <path
-            d="M150 200 Q250 150 350 200 T550 200 Q650 150 750 200 T950 200"
-            stroke="#002060"
-            strokeWidth="1"
-            fill="none"
-          />
-          <circle cx="200" cy="200" r="3" fill="#FFD700" />
-          <circle cx="400" cy="180" r="3" fill="#FFD700" />
-          <circle cx="600" cy="220" r="3" fill="#FFD700" />
-          <circle cx="800" cy="190" r="3" fill="#FFD700" />
-        </svg>
-      </div>
-
-      {/* Vision & Dream Banner */}
-      <div className="relative w-full z-20 pt-6 sm:pt-8 md:pt-10">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-          <div className="max-w-7xl mx-auto">
-            {/* 2026 Theme Banner */}
-            <div className="fade-element opacity-0 bg-gradient-to-r from-navy via-navy to-covenant p-3 sm:p-4 md:p-5 rounded-sm shadow-lg relative overflow-hidden mb-3 sm:mb-4">
-              {/* Decorative Speedometer Elements */}
-              <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 opacity-20 hidden sm:block">
-                <svg viewBox="0 0 120 80" className="w-20 md:w-32 h-12 md:h-20">
-                  <path
-                    d="M 20 60 A 40 40 0 0 1 100 60"
-                    stroke="#FFD700"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeLinecap="round"
+    <section ref={sectionRef} className="relative">
+      {/* Main Hero with Slideshow Background */}
+      <div className="relative min-h-screen overflow-hidden">
+        {/* Slideshow Background */}
+        <div className="absolute inset-0 bg-navy">
+          {/* Slideshow Media */}
+          <div className="relative w-full h-full">
+            {slideShowMedia.map((media, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+              >
+                {media.type === 'image' ? (
+                  <img
+                    src={media.src}
+                    alt={media.alt}
+                    className="w-full h-full object-cover"
                   />
-                  <line
-                    x1="60"
-                    y1="60"
-                    x2="85"
-                    y2="35"
-                    stroke="#FFD700"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="60" cy="60" r="4" fill="#FFD700" />
-                  <line x1="95" y1="25" x2="110" y2="15" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" />
-                  <line x1="100" y1="40" x2="115" y2="35" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
+                ) : (
+                  <video
+                    ref={(el) => {
+                      videoRefs.current[index] = el;
+                    }}
+                    autoPlay
+                    muted
+                    loop
+                    className="w-full h-full object-cover"
+                  >
+                    <source src={media.src} type="video/mp4" />
+                  </video>
+                )}
               </div>
-
-              {/* Theme Content */}
-              <div className="relative z-10 max-w-3xl">
-                <div className="flex items-center gap-2 mb-1 sm:mb-2">
-                  <div className="flex items-center gap-1">
-                    <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-gold" />
-                    <span className="text-gold text-xs font-bold tracking-wider">2026</span>
-                  </div>
-                  <span className="text-white/70 text-xs">•</span>
-                  <span className="text-white text-xs uppercase tracking-wider font-semibold">
-                    {currentLang === 'en' ? 'Prophetic Theme' : currentLang === 'es' ? 'Tema Profético' : 'Prophetic Theme'}
-                  </span>
-                </div>
-                <p className="font-serif text-xs sm:text-sm md:text-base text-white leading-tight">
-                  {content.theme2026[currentLang as keyof typeof content.theme2026] || content.theme2026.en}
-                </p>
-              </div>
-            </div>
-
-            {/* Vision & Dream Cards */}
-            <div className="grid md:grid-cols-2 gap-3 sm:gap-4">
-              {/* Vision Card */}
-              <div className="fade-element opacity-0 bg-white/95 backdrop-blur-sm border border-gold/30 p-4 sm:p-5 md:p-6 rounded-sm shadow-lg hover:shadow-xl transition-shadow">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-gold/20">
-                      <svg className="h-5 w-5 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-sm sm:text-base font-serif text-navy font-bold mb-2">
-                      {content.vision[currentLang as keyof typeof content.vision] || content.vision.en}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
-                      {content.visionContent[currentLang as keyof typeof content.visionContent] || content.visionContent.en}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dream Card */}
-              <div className="fade-element opacity-0 bg-white/95 backdrop-blur-sm border border-covenant/30 p-4 sm:p-5 md:p-6 rounded-sm shadow-lg hover:shadow-xl transition-shadow" style={{ animationDelay: '0.1s' }}>
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-covenant/20">
-                      <svg className="h-5 w-5 text-covenant" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM15.657 14.243a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM11 17a1 1 0 102 0v-1a1 1 0 10-2 0v1zM4.343 14.243a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM2 10a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.343 5.757a1 1 0 001.414-1.414L4.05 3.636a1 1 0 00-1.414 1.414l.707.707z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-sm sm:text-base font-serif text-navy font-bold mb-2">
-                      {content.yearsDream[currentLang as keyof typeof content.yearsDream] || content.yearsDream.en}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
-                      {content.yearsDreamContent[currentLang as keyof typeof content.yearsDreamContent] || content.yearsDreamContent.en}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
-      </div>
 
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 pt-8 sm:pt-12 lg:pt-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-12rem)]">
-            {/* Left Content */}
-            <div className="space-y-5 sm:space-y-6 fade-element opacity-0">
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/50 to-navy/70" />
+        </div>
+
+        {/* Slideshow Controls */}
+        <div className="absolute inset-x-0 bottom-6 sm:bottom-8 z-20 flex items-center justify-center gap-3">
+          {/* Prev Button */}
+          <button
+            onClick={prevSlide}
+            className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white transition-all backdrop-blur-sm border border-white/30 group"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          </button>
+
+          {/* Dots Indicator */}
+          <div className="flex gap-2">
+            {slideShowMedia.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`transition-all rounded-full ${index === currentSlide
+                  ? 'bg-gold w-8 h-2'
+                  : 'bg-white/40 w-2 h-2 hover:bg-white/60'
+                  }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Next Button */}
+          <button
+            onClick={nextSlide}
+            className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white transition-all backdrop-blur-sm border border-white/30 group"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+
+        {/* Content Container */}
+        <div className="relative z-10 h-full flex items-center py-16 sm:py-20 md:py-24 lg:py-32">
+          <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+            <div className="max-w-4xl mx-auto">
               {/* Scripture Reference */}
-              <div className="inline-flex items-center gap-2">
-                <span className="w-8 h-px bg-gold" />
-                <span className="text-xs uppercase tracking-[0.2em] text-covenant font-medium">
+              <div className="fade-element opacity-0 inline-flex items-center gap-3 mb-4 sm:mb-6">
+                <span className="w-8 sm:w-12 h-px bg-gold" />
+                <span className="text-xs sm:text-sm uppercase tracking-[0.2em] text-gold font-semibold">
                   {content.scripture[currentLang as keyof typeof content.scripture] || content.scripture.en}
                 </span>
               </div>
 
-              {/* Headline */}
-              <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-navy leading-tight">
+              {/* Main Headline */}
+              <h1 className="fade-element opacity-0 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight mb-4 sm:mb-6" style={{ animationDelay: '0.1s' }}>
                 {content.headline[currentLang as keyof typeof content.headline] || content.headline.en}
               </h1>
 
               {/* Subtext */}
-              <p className="text-sm sm:text-base text-foreground/80 max-w-xl leading-relaxed">
+              <p className="fade-element opacity-0 text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mb-6 sm:mb-8 leading-relaxed" style={{ animationDelay: '0.2s' }}>
                 {content.subtext[currentLang as keyof typeof content.subtext] || content.subtext.en}
               </p>
 
-              {/* Scripture Quote */}
-              <div className="py-3 sm:py-4 border-y border-border/50">
-                <p className="font-serif italic text-navy text-sm sm:text-base font-medium">
+              {/* Scripture Quote Banner */}
+              <div className="fade-element opacity-0 border-l-4 border-gold bg-white/10 backdrop-blur-sm px-4 sm:px-6 py-3 sm:py-4 mb-6 sm:mb-8 inline-block" style={{ animationDelay: '0.3s' }}>
+                <p className="font-serif italic text-white text-base sm:text-lg leading-relaxed">
                   {content.scriptureText[currentLang as keyof typeof content.scriptureText] || content.scriptureText.en}
                 </p>
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-wrap gap-3">
+              <div className="fade-element opacity-0 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4" style={{ animationDelay: '0.4s' }}>
                 <button
-                  onClick={() => scrollToSection('#contact')}
-                  className="btn-primary group text-sm sm:text-base"
+                  onClick={() => {
+                    const element = document.querySelector('#contact');
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="bg-gold hover:bg-gold/90 text-navy font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-sm transition-all inline-flex items-center justify-center sm:justify-start gap-2 group w-full sm:w-auto"
                 >
                   {content.cta1[currentLang as keyof typeof content.cta1] || content.cta1.en}
-                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <button
-                  onClick={() => scrollToSection('#media')}
-                  className="btn-outline group text-sm sm:text-base"
+                  onClick={() => setShowVideoModal(true)}
+                  className="bg-white/20 hover:bg-white/30 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-sm transition-all inline-flex items-center justify-center gap-2 backdrop-blur-sm border border-white/30 w-full sm:w-auto"
                 >
-                  <Play className="mr-2 w-4 h-4" />
+                  <Play className="w-4 h-4" />
                   {content.cta2[currentLang as keyof typeof content.cta2] || content.cta2.en}
                 </button>
               </div>
+
+              {/* 2026 Theme Badge */}
+              <div className="fade-element opacity-0 mt-8 sm:mt-12 inline-block bg-white/10 backdrop-blur-sm border border-white/20 rounded-sm px-4 sm:px-5 py-2 sm:py-3" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                  <Zap className="w-4 h-4 text-gold" />
+                  <span className="text-gold text-xs font-bold tracking-wider uppercase">2026</span>
+                </div>
+                <p className="text-white/90 text-xs sm:text-sm leading-tight">
+                  {content.theme2026[currentLang as keyof typeof content.theme2026] || content.theme2026.en}
+                </p>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* Right Visual */}
-            <div className="relative fade-element opacity-0" style={{ animationDelay: '0.2s' }}>
-              <div className="relative aspect-[3/4] max-w-md mx-auto lg:ml-auto">
-                {/* Menorah Overlay */}
-                <div className="absolute -top-6 -right-6 w-24 h-24 opacity-20 pointer-events-none z-10 hidden sm:block">
-                  <svg viewBox="0 0 100 100" className="w-full h-full">
-                    <defs>
-                      <linearGradient id="heroMenorahGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#FFD700" />
-                        <stop offset="100%" stopColor="#002060" />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M50 5 L50 20 M25 20 L75 20 M20 20 L20 45 M30 20 L30 45 M50 20 L50 50 M70 20 L70 45 M80 20 L80 45 M15 45 L85 45"
-                      stroke="url(#heroMenorahGradient)"
-                      strokeWidth="2"
-                      fill="none"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-white/60 text-xs uppercase tracking-wider font-semibold">Scroll</span>
+            <svg className="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      {/* Vision & Dream Section */}
+      <div className="relative w-full bg-gradient-to-br from-white via-secondary/5 to-white py-12 md:py-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Vision Card */}
+              <div className="fade-element opacity-0 bg-white border border-gold/30 p-6 md:p-8 rounded-sm shadow-lg hover:shadow-xl transition-all">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gold/20">
+                      <svg className="h-6 w-6 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-serif text-navy font-bold">
+                      {content.vision[currentLang as keyof typeof content.vision] || content.vision.en}
+                    </h3>
+                  </div>
                 </div>
-
-                {/* Portrait Frame */}
-                <div className="relative w-full h-full rounded-sm overflow-hidden shadow-editorial">
-                  <img
-                    src="/leadership-portrait.jpg"
-                    alt="Apostle Isaac - Senior Pastor"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent" />
-                </div>
-
-                {/* Gold accent line */}
-                <div className="absolute -bottom-4 -left-4 w-16 sm:w-24 h-1 bg-gold" />
-                <div className="absolute -bottom-4 -left-4 w-1 h-16 sm:h-24 bg-gold" />
+                <p className="text-foreground/80 leading-relaxed">
+                  {content.visionContent[currentLang as keyof typeof content.visionContent] || content.visionContent.en}
+                </p>
               </div>
 
-              {/* Name Badge */}
-              <div className="mt-6 max-w-md mx-auto lg:ml-auto">
-                <div className="inline-block px-4 py-2 bg-white border border-border/50 shadow-sm">
-                  <p className="text-xs uppercase tracking-[0.2em] text-covenant mb-1">
-                    {currentLang === 'en' ? 'Senior Pastor' : currentLang === 'es' ? 'Pastor Principal' : currentLang === 'fr' ? 'Pasteur Principal' : 'Senior Pastor'}
-                  </p>
-                  <p className="font-serif text-base sm:text-lg text-navy">Apostle Isaac</p>
+              {/* Dream Card */}
+              <div className="fade-element opacity-0 bg-white border border-covenant/30 p-6 md:p-8 rounded-sm shadow-lg hover:shadow-xl transition-all" style={{ animationDelay: '0.1s' }}>
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-full bg-covenant/20">
+                      <svg className="h-6 w-6 text-covenant" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM15.657 14.243a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM11 17a1 1 0 102 0v-1a1 1 0 10-2 0v1zM4.343 14.243a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM2 10a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM4.343 5.757a1 1 0 001.414-1.414L4.05 3.636a1 1 0 00-1.414 1.414l.707.707z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-serif text-navy font-bold">
+                      {content.yearsDream[currentLang as keyof typeof content.yearsDream] || content.yearsDream.en}
+                    </h3>
+                  </div>
                 </div>
+                <p className="text-foreground/80 leading-relaxed">
+                  {content.yearsDreamContent[currentLang as keyof typeof content.yearsDreamContent] || content.yearsDreamContent.en}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Bottom Accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+      {/* Video Modal */}
+      {showVideoModal && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl">
+            <button
+              onClick={() => setShowVideoModal(false)}
+              className="absolute -top-10 right-0 text-white hover:text-gold transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <div className="aspect-video rounded-sm overflow-hidden">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Latest Message"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

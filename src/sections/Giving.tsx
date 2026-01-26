@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Heart, Gift, TrendingUp, Smartphone, Copy, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Heart, Gift, TrendingUp, Copy, Check } from 'lucide-react';
 
 interface GivingProps {
     currentLang: string;
@@ -8,7 +7,7 @@ interface GivingProps {
 
 const content = {
     sectionLabel: {
-        en: 'Kingdom Giving',
+        en: 'Kingdom Giving & Offerings',
         es: 'Ofrenda del Reino',
         fr: 'Don du Royaume',
         pt: 'Doação do Reino',
@@ -17,33 +16,98 @@ const content = {
         ar: 'العطاء في الملكوت',
     },
     headline: {
-        en: 'Sow Into the Kingdom and Watch God Multiply Your Blessing',
-        es: 'Siembra en el Reino y Mira a Dios Multiplicar tu Bendición',
-        fr: 'Semez dans le Royaume et Regardez Dieu Multiplier votre Bénédiction',
-        pt: 'Semeia no Reino e Veja Deus Multiplicar sua Bênção',
-        de: 'Säen Sie ins Reich und Sehen Sie Gott Ihren Segen vervielfachen',
-        zh: '撒种在天国，看神倍增你的祝福',
-        ar: 'ابذر في الملكوت وشاهد الله يضاعف بركتك',
+        en: 'Partner With God\'s Purpose',
+        es: 'Asociate con el Propósito de Dios',
+        fr: 'Partenaire avec le Dessein de Dieu',
+        pt: 'Seja Parceiro do Propósito de Deus',
+        de: 'Partner in Gottes Absicht',
+        zh: '与神的目的同工',
+        ar: 'كن شريكاً في مقصد الله',
     },
     description: {
-        en: 'Your generosity fuels our mission to advance God\'s Kingdom globally. Every contribution—no matter the size—makes a significant impact in teaching, worship, leadership development, and reaching nations.',
-        es: 'Tu generosidad impulsa nuestra misión de avanzar el Reino de Dios globalmente. Cada contribución, sin importar el tamaño, tiene un impacto significativo en la enseñanza, adoración, desarrollo de liderazgo y alcance de naciones.',
-        fr: 'Votre générosité alimente notre mission d\'avancer le Royaume de Dieu à l\'échelle mondiale. Chaque contribution, quelle que soit sa taille, a un impact significatif sur l\'enseignement, l\'adoration, le développement du leadership et la portée des nations.',
-        pt: 'Sua generosidade alimenta nossa missão de avançar o Reino de Deus globalmente. Cada contribuição, não importa o tamanho, tem um impacto significativo no ensino, adoração, desenvolvimento de liderança e alcance das nações.',
-        de: 'Ihre Großzügigkeit treibt unsere Mission voran, das Reich Gottes weltweit voranzubringen. Jeder Beitrag – egal wie groß – hat einen großen Einfluss auf Lehre, Anbetung, Führungskräfteentwicklung und Reichweite von Nationen.',
-        zh: '你的慷慨推动我们全球推进神国度的使命。每一份贡献，无论大小，都在教导、敬拜、领袖发展和影响列国方面产生重大影响。',
-        ar: 'تغذي كرمك مهمتنا لتقدم ملكوت الله عالميًا. كل مساهمة - بغض النظر عن الحجم - لها تأثير كبير في التعليم والعبادة وتطوير القيادة والوصول إلى الأمم.',
+        en: 'Your generosity fuels our mission to advance God\'s Kingdom globally through teaching, worship, leadership development, and reaching nations with the Gospel.',
+        es: 'Tu generosidad impulsa nuestra misión de avanzar el Reino de Dios globalmente.',
+        fr: 'Votre générosité alimente notre mission d\'avancer le Royaume de Dieu à l\'échelle mondiale.',
+        pt: 'Sua generosidade alimenta nossa missão de avançar o Reino de Deus globalmente.',
+        de: 'Ihre Großzügigkeit treibt unsere Mission voran, das Reich Gottes weltweit voranzubringen.',
+        zh: '你的慷慨推动我们全球推进神国度的使命。',
+        ar: 'تغذي كرمك مهمتنا لتقدم ملكوت الله عالميًا.',
     },
-    scriptureRef: {
-        en: 'Malachi 3:10 - "Bring the whole tithe into the storehouse... and see if I will not throw open the floodgates of heaven and pour out so much blessing that there will not be room enough to store it."',
-        es: 'Malaquías 3:10 - "Traed todos los diezmos al alfolí... y pruébame ahora en esto, dice Jehová de los ejércitos, si no os abriré las ventanas de los cielos, y derramaré sobre vosotros bendición hasta que sobreabunde."',
-        fr: 'Malachie 3:10 - "Apportez la totalité de la dîme au magasin... et mettez-moi à l\'épreuve en cela, dit l\'Éternel des armées, pour voir si je n\'ouvre pas pour vous les écluses du ciel et si je ne verse pas sur vous la bénédiction jusqu\'à ce qu\'il n\'y ait plus de place."',
-        pt: 'Malaquias 3:10 - "Tragam todo o dízimo para o tesouro... e provem-me nisto, diz o Senhor dos Exércitos, se eu não vos abrir as janelas do céu e derramar bênção até que não haja espaço para armazená-la."',
-        de: 'Maleachi 3:10 - "Bringt den ganzen Zehnten ins Vorratshaus... und prüft mich darin, spricht der Herr der Heerscharen, ob ich dir nicht die Fenster des Himmels öffne und dir Segen ausschütte bis zum Überfluss."',
-        zh: '玛拉基书 3:10 - "万军之耶和华说：你们要将当纳的十分之一全然送入仓库... 以此试试我是否为你们敞开天上的窗户，倾福与你们，甚至无处可容。"',
-        ar: 'ملاخي 3:10 - "هاتوا الكل العشر إلى بيت الخزنة... قال رب الجنود: جربوني بهذا إن كنت لا أفتح لكم أبواب السماء وأفيض عليكم البركة حتى لا توسع."',
+    mpesaSteps: {
+        title: {
+            en: '3 Steps to Give',
+            es: '3 Pasos para Dar',
+            fr: '3 Étapes pour Donner',
+            pt: '3 Passos para Dar',
+            de: '3 Schritte zum Geben',
+            zh: '3个奉献步骤',
+            ar: '3 خطوات للتبرع',
+        },
+        step1Title: {
+            en: 'Open Lipa na M-Pesa',
+            es: 'Abre Lipa na M-Pesa',
+            fr: 'Ouvrir Lipa na M-Pesa',
+            pt: 'Abra Lipa na M-Pesa',
+            de: 'Öffnen Sie Lipa na M-Pesa',
+            zh: '打开Lipa na M-Pesa',
+            ar: 'افتح Lipa na M-Pesa',
+        },
+        step1Desc: {
+            en: 'Open the M-Pesa menu on your mobile phone',
+            es: 'Abre el menú de M-Pesa en tu teléfono',
+            fr: 'Ouvrir le menu M-Pesa sur votre téléphone',
+            pt: 'Abra o menu M-Pesa em seu telefone',
+            de: 'Öffnen Sie das M-Pesa-Menü auf Ihrem Telefon',
+            zh: '在手机上打开M-Pesa菜单',
+            ar: 'افتح قائمة M-Pesa على هاتفك',
+        },
+        step2Title: {
+            en: 'Select Buy Goods & Services',
+            es: 'Selecciona Comprar Bienes y Servicios',
+            fr: 'Sélectionnez Acheter des Biens et Services',
+            pt: 'Selecione Comprar Bens e Serviços',
+            de: 'Wählen Sie Waren und Dienstleistungen kaufen',
+            zh: '选择"购买商品和服务"',
+            ar: 'اختر شراء السلع والخدمات',
+        },
+        step2Desc: {
+            en: 'Look for the "Buy Goods and Services" option in the menu',
+            es: 'Busca la opción "Comprar Bienes y Servicios"',
+            fr: 'Recherchez l\'option "Acheter des Biens et Services"',
+            pt: 'Procure a opção "Comprar Bens e Serviços"',
+            de: 'Suchen Sie die Option "Waren und Dienstleistungen kaufen"',
+            zh: '寻找"购买商品和服务"选项',
+            ar: 'ابحث عن خيار "شراء السلع والخدمات"',
+        },
+        step3Title: {
+            en: 'Enter Till Number & Amount',
+            es: 'Ingresa el Número de Caja y Cantidad',
+            fr: 'Entrez le Numéro de Caisse et le Montant',
+            pt: 'Digite o Número da Caixa e o Valor',
+            de: 'Geben Sie die Kassennummer und den Betrag ein',
+            zh: '输入柜号和金额',
+            ar: 'أدخل رقم الكاشير والمبلغ',
+        },
+        step3Desc: {
+            en: 'Enter the Till number and your giving amount. Confirm with your M-Pesa PIN',
+            es: 'Ingresa el número de caja y tu cantidad. Confirma con tu PIN',
+            fr: 'Entrez le numéro et votre montant. Confirmez avec votre PIN',
+            pt: 'Digite o número e seu valor. Confirme com seu PIN',
+            de: 'Geben Sie die Nummer und Ihren Betrag ein. Bestätigen Sie mit Ihrer PIN',
+            zh: '输入号码和金额。用您的PIN确认',
+            ar: 'أدخل الرقم ومبلغك. أكد برمزك',
+        },
+        tillNumber: {
+            en: 'Till (Lipa na M-Pesa Number)',
+            es: 'Número de Caja',
+            fr: 'Numéro de Caisse',
+            pt: 'Número da Caixa',
+            de: 'Kassennummer',
+            zh: '柜号',
+            ar: 'رقم الكاشير',
+        },
     },
-    givingOptions: {
+    givingTypes: {
         tithe: {
             title: {
                 en: 'Tithe (10%)',
@@ -55,13 +119,13 @@ const content = {
                 ar: 'العشور (10%)',
             },
             description: {
-                en: 'The first 10% of your income set apart for God. A covenant commitment that positions you to receive God\'s increase and blessing.',
-                es: 'El primer 10% de tus ingresos apartado para Dios. Un compromiso del pacto que te posiciona para recibir el aumento y la bendición de Dios.',
-                fr: 'Les premiers 10% de vos revenus mis à part pour Dieu. Un engagement d\'alliance qui vous positionne pour recevoir l\'augmentation et la bénédiction de Dieu.',
-                pt: 'Os primeiros 10% de sua renda separados para Deus. Um compromisso da aliança que o posiciona para receber o aumento e a bênção de Deus.',
-                de: 'Die ersten 10% Ihres Einkommens, die für Gott bestimmt sind. Ein Bundesverpflichtung, die Sie positioniert, um Gottes Zunahme und Segen zu empfangen.',
-                zh: '你收入的前10%分别为神。一个使约承诺，使你处于接受神的增长和祝福的位置。',
-                ar: 'أول 10% من دخلك مخصص لله. التزام العهد الذي يضعك لتلقي زيادة الله وبركته.',
+                en: 'The first 10% of your income set apart for God. A covenant commitment for His blessings.',
+                es: 'El primer 10% de tus ingresos.',
+                fr: 'Les premiers 10% de vos revenus.',
+                pt: 'Os primeiros 10% de sua renda.',
+                de: 'Die ersten 10% Ihres Einkommens.',
+                zh: '你收入的前10%。',
+                ar: 'أول 10% من دخلك.',
             },
             icon: TrendingUp,
         },
@@ -76,13 +140,13 @@ const content = {
                 ar: 'القرابين (طوعا)',
             },
             description: {
-                en: 'Above the tithe, these gifts express your love and gratitude to God. Offerings are a powerful way to sow seeds of faith and blessing.',
-                es: 'Además del diezmo, estos regalos expresan tu amor y gratitud a Dios. Las ofrendas son una forma poderosa de sembrar semillas de fe y bendición.',
-                fr: 'Au-delà de la dîme, ces dons expriment votre amour et votre gratitude envers Dieu. Les offrandes sont un moyen puissant de semer des graines de foi et de bénédiction.',
-                pt: 'Além do dízimo, esses presentes expressam seu amor e gratidão a Deus. As ofertas são uma forma poderosa de semear sementes de fé e bênção.',
-                de: 'Über den Zehnten hinaus drücken diese Gaben Ihre Liebe und Dankbarkeit gegenüber Gott aus. Opfergaben sind ein kraftvoller Weg, Samen des Glaubens und des Segens zu säen.',
-                zh: '除十分之一外，这些礼物表达了你对神的爱和感谢。奉献是撒种信心和祝福种子的强大方式。',
-                ar: 'بخلاف العشور، تعبر هذه الهدايا عن حبك وامتنانك لله. القرابين هي طريقة قوية لبذر بذور الإيمان والبركة.',
+                en: 'Express your love and gratitude to God. Offerings are acts of faith and worship.',
+                es: 'Expresar tu amor y gratitud a Dios.',
+                fr: 'Exprimer votre amour et votre gratitude à Dieu.',
+                pt: 'Expressar seu amor e gratidão a Deus.',
+                de: 'Drücken Sie Ihre Liebe und Dankbarkeit gegenüber Gott aus.',
+                zh: '表达你对上帝的爱和感谢。',
+                ar: 'عبر عن حبك وامتنانك لله.',
             },
             icon: Gift,
         },
@@ -97,16 +161,72 @@ const content = {
                 ar: 'بذر البذور',
             },
             description: {
-                en: 'Strategic gifts released in response to God\'s prompting. Seeds sown in faith bring forth a harvest of blessing, multiplication, and divine favor.',
-                es: 'Regalos estratégicos liberados en respuesta al impulso de Dios. Las semillas sembradas con fe traen una cosecha de bendición, multiplicación y favor divino.',
-                fr: 'Des dons stratégiques libérés en réponse à la poussée de Dieu. Les graines semées avec foi apportent une moisson de bénédiction, de multiplication et de faveur divine.',
-                pt: 'Presentes estratégicos liberados em resposta ao impulso de Deus. Sementes semadas com fé trazem uma colheita de bênção, multiplicação e favor divino.',
-                de: 'Strategische Gaben, die als Reaktion auf Gottes Drängen freigegeben werden. Mit Glauben gesäte Samen bringen eine Ernte von Segen, Vermehrung und göttlicher Gunst.',
-                zh: '为回应神的催促而释放的战略性礼物。用信心撒的种子带来祝福、倍增和神圣恩惠的收获。',
-                ar: 'هدايا إستراتيجية تُطلق استجابة لحثّ الله. البذور المزروعة بالإيمان تحمل حصادًا من البركة والمضاعفة والنعمة الإلهية.',
+                en: 'Strategic gifts of faith. Seeds sown in faith bring forth a harvest of blessing.',
+                es: 'Regalos estratégicos de fe.',
+                fr: 'Des dons stratégiques de foi.',
+                pt: 'Presentes estratégicos de fé.',
+                de: 'Strategische Gaben des Glaubens.',
+                zh: '战略性的信心礼物。',
+                ar: 'هدايا استراتيجية للإيمان.',
             },
             icon: Heart,
         },
+    },
+    impactTitle: {
+        en: 'Your Impact',
+        es: 'Tu Impacto',
+        fr: 'Votre Impact',
+        pt: 'Seu Impacto',
+        de: 'Ihre Auswirkung',
+        zh: '您的影响',
+        ar: 'تأثيرك',
+    },
+    impactItems: {
+        item1: {
+            en: 'Funds apostolic teaching and prophetic ministry',
+            es: 'Financia la enseñanza apostólica',
+            fr: 'Finance l\'enseignement apostolique',
+            pt: 'Financia o ensino apostólico',
+            de: 'Finanziert apostolische Lehre',
+            zh: '资助使徒教导',
+            ar: 'يمول التعليم الرسولي',
+        },
+        item2: {
+            en: 'Supports global missions and kingdom advancement',
+            es: 'Apoya las misiones globales',
+            fr: 'Soutient les missions mondiales',
+            pt: 'Suporta missões globais',
+            de: 'Unterstützt globale Missionen',
+            zh: '支持全球宣教',
+            ar: 'يدعم المهام العالمية',
+        },
+        item3: {
+            en: 'Develops emerging leaders and kingdom workers',
+            es: 'Desarrolla líderes emergentes',
+            fr: 'Développe les leaders émergents',
+            pt: 'Desenvolve líderes emergentes',
+            de: 'Entwickelt aufstrebende Anführer',
+            zh: '培养新兴领袖',
+            ar: 'يطور القادة الناشئين',
+        },
+        item4: {
+            en: 'Expands worship, prayer, and spiritual empowerment',
+            es: 'Expande la adoración y la oración',
+            fr: 'Étend l\'adoration et la prière',
+            pt: 'Expande adoração e oração',
+            de: 'Erweitert Anbetung und Gebet',
+            zh: '扩展敬拜和祈祷',
+            ar: 'يوسع العبادة والصلاة',
+        },
+    },
+    scriptureRef: {
+        en: '"God loves a cheerful giver." - 2 Corinthians 9:7',
+        es: '"Dios ama al dador alegre." - 2 Corintios 9:7',
+        fr: '"Dieu aime celui qui donne avec joie." - 2 Corinthiens 9:7',
+        pt: '"Deus ama quem dá com alegria." - 2 Coríntios 9:7',
+        de: '"Gott liebt einen fröhlichen Geber." - 2 Korinther 9:7',
+        zh: '"神爱乐意施舍的人。" - 哥林多后书 9:7',
+        ar: '"الله يحب من يعطي بفرح." - 2 كورنثوس 9:7',
     },
 };
 
@@ -141,110 +261,108 @@ export default function Giving({ currentLang }: GivingProps) {
     };
 
     return (
-        <section id="giving" ref={sectionRef} className="py-20 md:py-28 bg-gradient-to-b from-white via-secondary/10 to-white">
-            <div className="editorial-container">
-                {/* Section Header */}
-                <div className="flex items-center gap-3 mb-8 fade-element opacity-0">
-                    <span className="w-12 h-px bg-gold" />
-                    <span className="section-label">
-                        {content.sectionLabel[currentLang as keyof typeof content.sectionLabel] || content.sectionLabel.en}
-                    </span>
-                </div>
-
-                {/* Main Headline */}
-                <h2 className="fade-element opacity-0 editorial-heading mb-6 max-w-3xl">
-                    {content.headline[currentLang as keyof typeof content.headline] || content.headline.en}
-                </h2>
-
-                {/* Description & Scripture */}
-                <div className="grid lg:grid-cols-2 gap-12 mb-16">
-                    <div className="fade-element opacity-0">
-                        <p className="text-lg text-foreground/80 leading-relaxed mb-6">
+        <section id="giving" ref={sectionRef} className="py-16 md:py-24 bg-gradient-to-b from-white via-secondary/5 to-white">
+            <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+                <div className="max-w-7xl mx-auto">
+                    {/* Section Header */}
+                    <div className="fade-element opacity-0 mb-12 text-center md:text-left">
+                        <div className="flex items-center gap-3 mb-4 justify-center md:justify-start">
+                            <span className="w-12 h-px bg-gold" />
+                            <span className="text-xs uppercase tracking-widest font-semibold text-gold">
+                                {content.sectionLabel[currentLang as keyof typeof content.sectionLabel] || content.sectionLabel.en}
+                            </span>
+                        </div>
+                        <h2 className="font-serif text-4xl md:text-5xl text-navy mb-6 leading-tight">
+                            {content.headline[currentLang as keyof typeof content.headline] || content.headline.en}
+                        </h2>
+                        <p className="text-lg text-foreground/80 max-w-2xl leading-relaxed">
                             {content.description[currentLang as keyof typeof content.description] || content.description.en}
                         </p>
                     </div>
 
-                    {/* Scripture Box */}
-                    <div className="fade-element opacity-0 bg-navy/5 border-l-4 border-gold p-6 rounded-sm" style={{ animationDelay: '0.1s' }}>
-                        <p className="font-serif italic text-navy leading-relaxed">
-                            {content.scriptureRef[currentLang as keyof typeof content.scriptureRef] || content.scriptureRef.en}
-                        </p>
-                    </div>
-                </div>
-
-                {/* Three Types of Giving Cards */}
-                <div className="grid md:grid-cols-3 gap-6 mb-16">
-                    {Object.entries(content.givingOptions).map((entry, index) => {
-                        const [key, option] = entry;
-                        const IconComponent = option.icon;
-
-                        return (
-                            <div
-                                key={key}
-                                className="fade-element opacity-0 bg-white border border-border/50 p-6 md:p-8 rounded-sm hover:shadow-editorial transition-all hover:border-gold/50"
-                                style={{ animationDelay: `${0.1 * (index + 2)}s` }}
-                            >
-                                {/* Icon */}
-                                <div className="mb-4">
-                                    <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center">
-                                        <IconComponent className="w-7 h-7 text-gold" />
-                                    </div>
-                                </div>
-
-                                {/* Title */}
-                                <h3 className="font-serif text-xl md:text-2xl text-navy mb-3">
-                                    {option.title[currentLang as keyof typeof option.title] || option.title.en}
-                                </h3>
-
-                                {/* Description */}
-                                <p className="text-sm md:text-base text-foreground/70 leading-relaxed">
-                                    {option.description[currentLang as keyof typeof option.description] || option.description.en}
-                                </p>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Payment Methods Section */}
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    {/* Left - Payment Instructions */}
-                    <div className="fade-element opacity-0">
-                        <h3 className="font-serif text-2xl md:text-3xl text-navy mb-8">
-                            {currentLang === 'en' ? 'Give Today' : currentLang === 'es' ? 'Dona Hoy' : currentLang === 'fr' ? 'Donnez Aujourd\'hui' : currentLang === 'pt' ? 'Doe Hoje' : currentLang === 'de' ? 'Heute Geben' : currentLang === 'zh' ? '今天奉献' : 'تبرع اليوم'}
+                    {/* M-Pesa Steps Section */}
+                    <div className="fade-element opacity-0 mb-16" style={{ animationDelay: '0.1s' }}>
+                        <h3 className="font-serif text-3xl md:text-4xl text-navy mb-12 text-center">
+                            {content.mpesaSteps.title[currentLang as keyof typeof content.mpesaSteps.title] || content.mpesaSteps.title.en}
                         </h3>
 
-                        <div className="space-y-6">
-                            {/* M-Pesa Option */}
-                            <div className="bg-gradient-to-br from-green-50 to-green-100/50 border border-green-200 p-6 rounded-sm">
-                                <div className="flex items-start gap-3 mb-4">
-                                    <Smartphone className="w-6 h-6 text-green-700 flex-shrink-0 mt-1" />
-                                    <div>
-                                        <h4 className="font-semibold text-green-900 text-lg mb-2">
-                                            {currentLang === 'en' ? 'Lipa na M-Pesa' : currentLang === 'es' ? 'Lipa na M-Pesa' : 'Lipa na M-Pesa'}
-                                        </h4>
-                                        <p className="text-sm text-green-800 mb-4">
-                                            {currentLang === 'en'
-                                                ? 'Quick and secure mobile payment'
-                                                : currentLang === 'es'
-                                                    ? 'Pago móvil rápido y seguro'
-                                                    : currentLang === 'fr'
-                                                        ? 'Paiement mobile rapide et sécurisé'
-                                                        : currentLang === 'pt'
-                                                            ? 'Pagamento móvel rápido e seguro'
-                                                            : currentLang === 'de'
-                                                                ? 'Schnelle und sichere Mobilzahlung'
-                                                                : currentLang === 'zh'
-                                                                    ? '快速安全的移动支付'
-                                                                    : 'الدفع عبر الهاتف المحمول بسرعة وأمان'}
-                                        </p>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {/* Step 1 */}
+                            <div className="fade-element opacity-0 relative" style={{ animationDelay: '0.2s' }}>
+                                <div className="bg-white border-2 border-gold/30 p-8 rounded-sm hover:shadow-lg transition-all h-full">
+                                    {/* Step Number */}
+                                    <div className="absolute -top-6 left-8 bg-gold text-navy w-12 h-12 rounded-full flex items-center justify-center font-serif text-2xl font-bold">
+                                        1
+                                    </div>
 
-                                        {/* Lipa Number Display */}
-                                        <div className="flex items-center gap-2 bg-white p-3 rounded border border-green-200">
-                                            <code className="flex-1 font-mono font-bold text-green-900 text-lg">Buy Goods - {lipaNumber}</code>
+                                    <h4 className="font-serif text-xl text-navy font-bold mb-4 mt-4">
+                                        {content.mpesaSteps.step1Title[currentLang as keyof typeof content.mpesaSteps.step1Title] || content.mpesaSteps.step1Title.en}
+                                    </h4>
+                                    <p className="text-foreground/70 text-sm leading-relaxed mb-4">
+                                        {content.mpesaSteps.step1Desc[currentLang as keyof typeof content.mpesaSteps.step1Desc] || content.mpesaSteps.step1Desc.en}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Arrow Down Mobile */}
+                            <div className="flex justify-center md:hidden text-gold">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                            </div>
+
+                            {/* Step 2 */}
+                            <div className="fade-element opacity-0 relative" style={{ animationDelay: '0.3s' }}>
+                                <div className="bg-white border-2 border-covenant/30 p-8 rounded-sm hover:shadow-lg transition-all h-full">
+                                    {/* Step Number */}
+                                    <div className="absolute -top-6 left-8 bg-covenant text-white w-12 h-12 rounded-full flex items-center justify-center font-serif text-2xl font-bold">
+                                        2
+                                    </div>
+
+                                    <h4 className="font-serif text-xl text-navy font-bold mb-4 mt-4">
+                                        {content.mpesaSteps.step2Title[currentLang as keyof typeof content.mpesaSteps.step2Title] || content.mpesaSteps.step2Title.en}
+                                    </h4>
+                                    <p className="text-foreground/70 text-sm leading-relaxed">
+                                        {content.mpesaSteps.step2Desc[currentLang as keyof typeof content.mpesaSteps.step2Desc] || content.mpesaSteps.step2Desc.en}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Arrow Down Mobile */}
+                            <div className="flex justify-center md:hidden text-gold">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                            </div>
+
+                            {/* Step 3 */}
+                            <div className="fade-element opacity-0 relative" style={{ animationDelay: '0.4s' }}>
+                                <div className="bg-gradient-to-br from-green-50 to-green-100/50 border-2 border-green-400 p-8 rounded-sm hover:shadow-lg transition-all h-full">
+                                    {/* Step Number */}
+                                    <div className="absolute -top-6 left-8 bg-green-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-serif text-2xl font-bold">
+                                        3
+                                    </div>
+
+                                    <h4 className="font-serif text-xl text-navy font-bold mb-4 mt-4">
+                                        {content.mpesaSteps.step3Title[currentLang as keyof typeof content.mpesaSteps.step3Title] || content.mpesaSteps.step3Title.en}
+                                    </h4>
+                                    <p className="text-foreground/70 text-sm leading-relaxed mb-6">
+                                        {content.mpesaSteps.step3Desc[currentLang as keyof typeof content.mpesaSteps.step3Desc] || content.mpesaSteps.step3Desc.en}
+                                    </p>
+
+                                    {/* Till Number Box */}
+                                    <div className="bg-white border-2 border-green-400 rounded p-3">
+                                        <p className="text-xs text-green-700 font-semibold mb-2">
+                                            {content.mpesaSteps.tillNumber[currentLang as keyof typeof content.mpesaSteps.tillNumber] || content.mpesaSteps.tillNumber.en}
+                                        </p>
+                                        <div className="flex items-center gap-2">
+                                            <code className="flex-1 font-mono font-bold text-green-700 text-xl">
+                                                {lipaNumber}
+                                            </code>
                                             <button
                                                 onClick={copyToClipboard}
                                                 className="p-2 hover:bg-green-100 rounded transition-colors"
-                                                title={currentLang === 'en' ? 'Copy' : 'Copiar'}
+                                                title="Copy"
                                             >
                                                 {copiedPhone ? (
                                                     <Check className="w-5 h-5 text-green-700" />
@@ -253,113 +371,68 @@ export default function Giving({ currentLang }: GivingProps) {
                                                 )}
                                             </button>
                                         </div>
-
-                                        <p className="text-xs text-green-700 mt-3 font-medium">
-                                            {currentLang === 'en'
-                                                ? '1. Dial the code above | 2. Enter amount | 3. Confirm with PIN'
-                                                : currentLang === 'es'
-                                                    ? '1. Marca el código anterior | 2. Ingresa cantidad | 3. Confirma con PIN'
-                                                    : currentLang === 'fr'
-                                                        ? '1. Composez le code ci-dessus | 2. Entrez le montant | 3. Confirmez avec le PIN'
-                                                        : currentLang === 'pt'
-                                                            ? '1. Disque o código acima | 2. Digite o valor | 3. Confirme com PIN'
-                                                            : currentLang === 'de'
-                                                                ? '1. Geben Sie den Code ein | 2. Geben Sie Betrag ein | 3. Mit PIN bestätigen'
-                                                                : currentLang === 'zh'
-                                                                    ? '1. 拨打上面的代码 | 2. 输入金额 | 3. 用PIN确认'
-                                                                    : '1. اطلب الكود أعلاه | 2. أدخل المبلغ | 3. أكد برمز PIN'}
-                                        </p>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Bank Transfer */}
-                            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 border border-blue-200 p-6 rounded-sm">
-                                <h4 className="font-semibold text-blue-900 text-lg mb-3">
-                                    {currentLang === 'en' ? 'Bank Transfer' : currentLang === 'es' ? 'Transferencia Bancaria' : 'Transferencia Bancaria'}
-                                </h4>
-                                <p className="text-sm text-blue-800">
-                                    {currentLang === 'en'
-                                        ? 'Contact us for bank account details'
-                                        : currentLang === 'es'
-                                            ? 'Contáctenos para obtener los detalles de la cuenta bancaria'
-                                            : 'Contactez-nous pour les détails du compte bancaire'}
-                                </p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right - Impact Statement */}
-                    <div className="fade-element opacity-0" style={{ animationDelay: '0.2s' }}>
-                        <div className="bg-gradient-to-br from-navy via-covenant to-covenant/80 text-white p-8 md:p-10 rounded-sm shadow-editorial">
-                            <h4 className="font-serif text-2xl md:text-3xl mb-6 leading-tight">
-                                {currentLang === 'en'
-                                    ? 'Your Gift Makes a Difference'
-                                    : currentLang === 'es'
-                                        ? 'Tu Regalo Hace la Diferencia'
-                                        : currentLang === 'fr'
-                                            ? 'Votre Cadeau Fait la Différence'
-                                            : currentLang === 'pt'
-                                                ? 'Seu Presente Faz a Diferença'
-                                                : currentLang === 'de'
-                                                    ? 'Ihre Gabe macht den Unterschied'
-                                                    : currentLang === 'zh'
-                                                        ? '你的礼物很重要'
-                                                        : 'هديتك تحدث فرقاً'}
-                            </h4>
+                    {/* Giving Types */}
+                    <div className="fade-element opacity-0 mb-16" style={{ animationDelay: '0.2s' }}>
+                        <div className="grid md:grid-cols-3 gap-6">
+                            {Object.entries(content.givingTypes).map((entry, index) => {
+                                const [key, option] = entry;
+                                const IconComponent = option.icon;
 
-                            <ul className="space-y-4">
-                                <li className="flex gap-3">
-                                    <span className="text-gold text-2xl flex-shrink-0">•</span>
-                                    <span className="text-white/90">
-                                        {currentLang === 'en'
-                                            ? 'Funds apostolic teaching and prophetic ministry'
-                                            : currentLang === 'es'
-                                                ? 'Financia la enseñanza apostólica y el ministerio profético'
-                                                : 'Finance l\'enseignement apostolique et le ministère prophétique'}
-                                    </span>
-                                </li>
-                                <li className="flex gap-3">
-                                    <span className="text-gold text-2xl flex-shrink-0">•</span>
-                                    <span className="text-white/90">
-                                        {currentLang === 'en'
-                                            ? 'Supports global missions and kingdom advancement'
-                                            : currentLang === 'es'
-                                                ? 'Apoya las misiones globales y el avance del reino'
-                                                : 'Soutient les missions mondiales et l\'avancement du royaume'}
-                                    </span>
-                                </li>
-                                <li className="flex gap-3">
-                                    <span className="text-gold text-2xl flex-shrink-0">•</span>
-                                    <span className="text-white/90">
-                                        {currentLang === 'en'
-                                            ? 'Develops emerging leaders and kingdom workers'
-                                            : currentLang === 'es'
-                                                ? 'Desarrolla líderes emergentes y obreros del reino'
-                                                : 'Développe les leaders émergents et les ouvriers du royaume'}
-                                    </span>
-                                </li>
-                                <li className="flex gap-3">
-                                    <span className="text-gold text-2xl flex-shrink-0">•</span>
-                                    <span className="text-white/90">
-                                        {currentLang === 'en'
-                                            ? 'Expands worship, prayer, and spiritual empowerment'
-                                            : currentLang === 'es'
-                                                ? 'Expande la adoración, la oración y el empoderamiento espiritual'
-                                                : 'Étend l\'adoration, la prière et l\'autonomisation spirituelle'}
-                                    </span>
-                                </li>
-                            </ul>
+                                return (
+                                    <div
+                                        key={key}
+                                        className="fade-element opacity-0 bg-white border border-border/50 p-6 md:p-8 rounded-sm hover:shadow-lg transition-all"
+                                        style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+                                    >
+                                        <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mb-6">
+                                            <IconComponent className="w-7 h-7 text-gold" />
+                                        </div>
+                                        <h3 className="font-serif text-xl md:text-2xl text-navy mb-3 font-bold">
+                                            {option.title[currentLang as keyof typeof option.title] || option.title.en}
+                                        </h3>
+                                        <p className="text-sm md:text-base text-foreground/70 leading-relaxed">
+                                            {option.description[currentLang as keyof typeof option.description] || option.description.en}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
 
-                            <div className="mt-8 pt-8 border-t border-white/20">
-                                <p className="text-sm text-white/80 italic">
-                                    {currentLang === 'en'
-                                        ? '"God loves a cheerful giver." - 2 Corinthians 9:7'
-                                        : currentLang === 'es'
-                                            ? '"Dios ama al dador alegre." - 2 Corintios 9:7'
-                                            : '"Dieu aime celui qui donne avec joie." - 2 Corinthiens 9:7'}
-                                </p>
-                            </div>
+                    {/* Impact Section */}
+                    <div className="fade-element opacity-0 bg-gradient-to-r from-navy via-covenant to-navy text-white p-8 md:p-12 rounded-sm shadow-lg" style={{ animationDelay: '0.3s' }}>
+                        <h3 className="font-serif text-3xl md:text-4xl mb-10 text-center">
+                            {content.impactTitle[currentLang as keyof typeof content.impactTitle] || content.impactTitle.en}
+                        </h3>
+
+                        <div className="grid md:grid-cols-2 gap-6 mb-8">
+                            {Object.entries(content.impactItems).map((entry) => {
+                                const [, item] = entry;
+                                return (
+                                    <div key={entry[0]} className="flex gap-4 items-start">
+                                        <div className="flex-shrink-0 mt-1">
+                                            <div className="w-6 h-6 rounded-full bg-gold/30 flex items-center justify-center">
+                                                <span className="w-2 h-2 rounded-full bg-gold" />
+                                            </div>
+                                        </div>
+                                        <p className="text-white/90 text-sm md:text-base leading-relaxed">
+                                            {item[currentLang as keyof typeof item] || item.en}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <div className="border-t border-white/20 pt-8 text-center">
+                            <p className="font-serif italic text-white/90 text-lg">
+                                {content.scriptureRef[currentLang as keyof typeof content.scriptureRef] || content.scriptureRef.en}
+                            </p>
                         </div>
                     </div>
                 </div>

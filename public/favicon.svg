@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background circle for better visibility -->
+  <circle cx="50" cy="50" r="48" fill="#002060" opacity="0.1"/>
+  
+  <!-- Menorah outline -->
+  <g stroke="#FFD700" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Center stem -->
+    <line x1="50" y1="20" x2="50" y2="70"/>
+    
+    <!-- Left candles -->
+    <line x1="30" y1="35" x2="30" y2="65"/>
+    <line x1="35" y1="30" x2="35" y2="65"/>
+    <line x1="40" y1="32" x2="40" y2="65"/>
+    
+    <!-- Right candles -->
+    <line x1="60" y1="32" x2="60" y2="65"/>
+    <line x1="65" y1="30" x2="65" y2="65"/>
+    <line x1="70" y1="35" x2="70" y2="65"/>
+    
+    <!-- Base -->
+    <line x1="25" y1="70" x2="75" y2="70"/>
+    <line x1="27" y1="70" x2="27" y2="75"/>
+    <line x1="73" y1="70" x2="73" y2="75"/>
+    <line x1="25" y1="75" x2="75" y2="75"/>
+  </g>
+  
+  <!-- Flame indicators (small circles at top of candles) -->
+  <g fill="#FFD700">
+    <circle cx="30" cy="18" r="2"/>
+    <circle cx="35" cy="16" r="2"/>
+    <circle cx="40" cy="17" r="2"/>
+    <circle cx="50" cy="15" r="2.5"/>
+    <circle cx="60" cy="17" r="2"/>
+    <circle cx="65" cy="16" r="2"/>
+    <circle cx="70" cy="18" r="2"/>
+  </g>
+</svg>

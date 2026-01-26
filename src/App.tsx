@@ -13,6 +13,7 @@ import Giving from './sections/Giving';
 import Contact from './sections/Contact';
 import Footer from './sections/Footer';
 import AppointmentBooking from './components/AppointmentBooking';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 function App() {
   const [currentLang, setCurrentLang] = useState('en');
@@ -56,6 +57,14 @@ function App() {
         currentLang={currentLang}
         onLangChange={handleLangChange}
         onOpenBooking={() => setIsBookingOpen(true)}
+      />
+
+      {/* Floating Contact Buttons */}
+      <FloatingWhatsApp
+        phoneNumber="254723947514"
+        message="Hello! I would like to know more about Menorah Faith Chapel."
+        locationUrl="https://maps.app.goo.gl/7Y2NasaMrH7YJztm6"
+        locationName="Ngong, Embulbul"
       />
 
       {/* Appointment Booking Modal */}
