@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Play, ArrowRight, Headphones, Video, BookOpen } from 'lucide-react';
+import { site } from '../data/site';
 
 interface MediaProps {
   currentLang: string;
@@ -162,8 +163,13 @@ export default function Media({ currentLang }: MediaProps) {
               {content.headline[currentLang as keyof typeof content.headline] || content.headline.en}
             </h2>
 
-            {/* Video Player Placeholder */}
-            <div className="relative aspect-video bg-navy-light rounded-sm overflow-hidden group cursor-pointer">
+            {/* Featured video — opens the Facebook page where messages are posted */}
+            <a
+              href={site.socials.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Watch the latest message on Facebook"
+              className="relative aspect-video bg-navy-light rounded-sm overflow-hidden group cursor-pointer block">
               {/* Thumbnail */}
               <div className="absolute inset-0 bg-gradient-to-br from-navy via-navy-light to-navy-dark" />
               
@@ -185,13 +191,18 @@ export default function Media({ currentLang }: MediaProps) {
                   <span>{recentSermons[selectedSermon].duration}</span>
                 </div>
               </div>
-            </div>
+            </a>
 
             {/* CTA */}
-            <button className="mt-6 inline-flex items-center text-gold hover:text-gold-light transition-colors group">
+            <a
+              href={site.socials.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center text-gold hover:text-gold-light transition-colors group"
+            >
               {content.watchMore[currentLang as keyof typeof content.watchMore] || content.watchMore.en}
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
+            </a>
           </div>
 
           {/* Right - Recent Sermons & Categories */}

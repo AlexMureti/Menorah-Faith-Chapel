@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Play, Zap, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Play, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
+import { site } from '../data/site';
 
 interface HeroProps {
   currentLang: string;
@@ -117,7 +118,6 @@ const slideShowMedia = [
 export default function Hero({ currentLang }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const [showVideoModal, setShowVideoModal] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -286,13 +286,15 @@ export default function Hero({ currentLang }: HeroProps) {
                   {content.cta1[currentLang as keyof typeof content.cta1] || content.cta1.en}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button
-                  onClick={() => setShowVideoModal(true)}
+                <a
+                  href={site.socials.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-white/20 hover:bg-white/30 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-sm transition-all inline-flex items-center justify-center gap-2 backdrop-blur-sm border border-white/30 w-full sm:w-auto"
                 >
                   <Play className="w-4 h-4" />
                   {content.cta2[currentLang as keyof typeof content.cta2] || content.cta2.en}
-                </button>
+                </a>
               </div>
 
               {/* 2026 Theme Badge */}
@@ -370,29 +372,6 @@ export default function Hero({ currentLang }: HeroProps) {
           </div>
         </div>
       </div>
-      {/* Video Modal */}
-      {showVideoModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="relative w-full max-w-4xl">
-            <button
-              onClick={() => setShowVideoModal(false)}
-              className="absolute -top-10 right-0 text-white hover:text-gold transition-colors"
-            >
-              <X className="w-8 h-8" />
-            </button>
-            <div className="aspect-video rounded-sm overflow-hidden">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Latest Message"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

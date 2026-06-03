@@ -8,11 +8,11 @@ interface AppointmentBookingProps {
 
 const content = {
   title: {
-    en: 'Book an Appointment with Apostle Isaac',
-    es: 'Reservar una Cita con el Apóstol Isaac',
-    fr: 'Réserver un Rendez-vous avec l\'Apôtre Isaac',
-    pt: 'Agendar uma Consulta com o Apóstolo Isaac',
-    de: 'Termin mit Apostel Isaac Buchen',
+    en: 'Book an Appointment with Apostle Isaack Muriungi',
+    es: 'Reservar una Cita con el Apóstol Isaack Muriungi',
+    fr: 'Réserver un Rendez-vous avec l\'Apôtre Isaack Muriungi',
+    pt: 'Agendar uma Consulta com o Apóstolo Isaack Muriungi',
+    de: 'Termin mit Apostel Isaack Muriungi Buchen',
     zh: '预约与以撒使徒会面',
     ar: 'حجز موعد مع الرسول إسحاق',
   },
@@ -136,7 +136,7 @@ export default function AppointmentBooking({ currentLang, onClose }: Appointment
     });
 
     // Create WhatsApp message
-    const whatsappMessage = `Hello Apostle Isaac,\n\n` +
+    const whatsappMessage = `Hello Apostle Isaack Muriungi,\n\n` +
       `I would like to book an appointment with you:\n\n` +
       `*Name:* ${formData.name}\n` +
       `*Purpose:* ${formData.purpose || 'Not specified'}\n` +

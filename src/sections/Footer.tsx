@@ -1,4 +1,5 @@
-import { Phone, Mail, Globe, ChevronUp } from 'lucide-react';
+import { Phone, Mail, Globe, ChevronUp, Facebook, MapPin } from 'lucide-react';
+import { site } from '../data/site';
 
 interface FooterProps {
   currentLang: string;
@@ -150,18 +151,40 @@ export default function Footer({ currentLang, onLangChange }: FooterProps) {
               {/* Contact Info */}
               <div className="space-y-4 mb-6">
                 <a
-                  href="tel:+254723947514"
+                  href={`tel:${site.phone.replace(/\s/g, '')}`}
                   className="flex items-center gap-3 text-sm text-white/70 hover:text-gold transition-colors"
                 >
                   <Phone className="w-4 h-4 flex-shrink-0" />
-                  <span>+254 723 947514</span>
+                  <span>{site.phone}</span>
                 </a>
                 <a
-                  href="mailto:info@menorahfaith.org"
+                  href={`mailto:${site.email}`}
                   className="flex items-center gap-3 text-sm text-white/70 hover:text-gold transition-colors"
                 >
                   <Mail className="w-4 h-4 flex-shrink-0" />
-                  <span>info@menorahfaith.org</span>
+                  <span>{site.email}</span>
+                </a>
+                <a
+                  href={site.location.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-sm text-white/70 hover:text-gold transition-colors"
+                >
+                  <MapPin className="w-4 h-4 flex-shrink-0" />
+                  <span>{site.location.label}</span>
+                </a>
+              </div>
+
+              {/* Social */}
+              <div className="flex items-center gap-3 mb-6">
+                <a
+                  href={site.socials.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow Menorah Faith Chapel on Facebook"
+                  className="w-10 h-10 flex items-center justify-center rounded-full border border-white/20 text-white/80 hover:text-navy hover:bg-gold hover:border-gold transition-all"
+                >
+                  <Facebook className="w-4 h-4" />
                 </a>
               </div>
 

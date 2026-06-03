@@ -25,11 +25,11 @@ const content = {
     ar: 'مدعو للرعاية، مفوض للتجهيز',
   },
   bio: {
-    en: 'Isaac is the Senior Pastor of Menorah Faith Chapel, called to teach the Word of God with clarity and conviction. His ministry focuses on spiritual formation, grounding believers in the truth of Scripture, and raising a people who know their God and carry out great exploits.',
-    es: 'Isaac es el Pastor Principal de Menorah Faith Chapel, llamado a enseñar la Palabra de Dios con claridad y convicción. Su ministerio se enfoca en la formación espiritual, arraigando a los creyentes en la verdad de las Escrituras y levantando un pueblo que conoce a su Dios y realiza grandes hazañas.',
-    fr: 'Isaac est le Pasteur Principal de Menorah Faith Chapel, appelé à enseigner la Parole de Dieu avec clarté et conviction. Son ministère se concentre sur la formation spirituelle, enracinant les croyants dans la vérité des Écritures et élevant un peuple qui connaît son Dieu et accomplit de grandes exploits.',
-    pt: 'Isaac é o Pastor Principal da Menorah Faith Chapel, chamado a ensinar a Palavra de Deus com clareza e convicção. Seu ministério se concentra na formação espiritual, enraizando os crentes na verdade das Escrituras e levantando um povo que conhece seu Deus e realiza grandes feitos.',
-    de: 'Isaac ist der Seniorpastor der Menorah Faith Chapel, berufen, das Wort Gottes mit Klarheit und Überzeugung zu lehren. Sein Dienst konzentriert sich auf die geistliche Formung, das Verankern der Gläubigen in der Wahrheit der Schrift und das Erziehen eines Volkes, das seinen Gott kennt und große Taten vollbringt.',
+    en: 'Apostle Isaack Muriungi is the Senior Pastor of Menorah Faith Chapel, called to teach the Word of God with clarity and conviction. His ministry focuses on spiritual formation, grounding believers in the truth of Scripture, and raising a people who know their God and carry out great exploits.',
+    es: 'El Apóstol Isaack Muriungi es el Pastor Principal de Menorah Faith Chapel, llamado a enseñar la Palabra de Dios con claridad y convicción. Su ministerio se enfoca en la formación espiritual, arraigando a los creyentes en la verdad de las Escrituras y levantando un pueblo que conoce a su Dios y realiza grandes hazañas.',
+    fr: 'L\'Apôtre Isaack Muriungi est le Pasteur Principal de Menorah Faith Chapel, appelé à enseigner la Parole de Dieu avec clarté et conviction. Son ministère se concentre sur la formation spirituelle, enracinant les croyants dans la vérité des Écritures et élevant un peuple qui connaît son Dieu et accomplit de grandes exploits.',
+    pt: 'O Apóstolo Isaack Muriungi é o Pastor Principal da Menorah Faith Chapel, chamado a ensinar a Palavra de Deus com clareza e convicção. Seu ministério se concentra na formação espiritual, enraizando os crentes na verdade das Escrituras e levantando um povo que conhece seu Deus e realiza grandes feitos.',
+    de: 'Apostel Isaack Muriungi ist der Seniorpastor der Menorah Faith Chapel, berufen, das Wort Gottes mit Klarheit und Überzeugung zu lehren. Sein Dienst konzentriert sich auf die geistliche Formung, das Verankern der Gläubigen in der Wahrheit der Schrift und das Erziehen eines Volkes, das seinen Gott kennt und große Taten vollbringt.',
     zh: '以撒是Menorah Faith Chapel的主任牧师，蒙召以清晰和信念教导神的话语。他的事工专注于灵性塑造，使信徒扎根于圣经的真理，并兴起认识神、成就大事的子民。',
     ar: 'إسحاق هو القس الأكبر لكنيسة Menorah Faith Chapel، مدعو لتعليم كلمة الله بوضوح واقتناع. يركز خدمته على التكوين الروحي، وتجذير المؤمنين في حقيقة الكتاب المقدس، ورفع شعب يعرف إلهه ويحقق إنجازات عظيمة.',
   },
@@ -101,7 +101,7 @@ export default function Leadership({ currentLang }: LeadershipProps) {
               <div className="relative aspect-[4/5] rounded-sm overflow-hidden shadow-editorial">
                 <img
                   src="/leadership-portrait.jpg"
-                  alt="Apostle Isaac"
+                  alt="Apostle Isaack Muriungi"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy/30 via-transparent to-transparent" />
@@ -109,7 +109,7 @@ export default function Leadership({ currentLang }: LeadershipProps) {
 
               {/* Name Plate */}
               <div className="absolute -bottom-6 left-6 bg-white px-6 py-4 shadow-editorial border-l-4 border-gold">
-                <p className="font-serif text-2xl text-navy">Apostle Isaac</p>
+                <p className="font-serif text-2xl text-navy">Apostle Isaack Muriungi</p>
                 <p className="text-sm text-foreground/60 mt-1">
                   {currentLang === 'en' ? 'Senior Pastor & Prophet' : currentLang === 'es' ? 'Pastor Principal y Profeta' : currentLang === 'fr' ? 'Pasteur Principal et Prophète' : 'Senior Pastor & Prophet'}
                 </p>
