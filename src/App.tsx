@@ -14,11 +14,18 @@ import Contact from './sections/Contact';
 import Footer from './sections/Footer';
 import AppointmentBooking from './components/AppointmentBooking';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import LightCursor from './components/LightCursor';
+import LogoSeal from './components/LogoSeal';
+import { useSmoothScroll, useScrollReveal } from './lib/motion';
 
 function App() {
   const [currentLang, setCurrentLang] = useState('en');
   const [isLoading, setIsLoading] = useState(true);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+  // Buttery smooth scroll + scroll-triggered reveals across the page.
+  useSmoothScroll();
+  useScrollReveal();
 
   useEffect(() => {
     // Simulate initial load
@@ -37,14 +44,14 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-navy flex items-center justify-center">
         <div className="text-center">
-          {/* Menorah Logo Animation */}
-          <div className="w-24 h-24 mx-auto mb-6 animate-pulse">
-            <img src="/Menorah Logo.jpeg" alt="Menorah Faith Chapel Logo" className="w-full h-full object-contain" />
+          {/* Living gold seal */}
+          <div className="mx-auto mb-6 flex justify-center">
+            <LogoSeal size={104} />
           </div>
-          <h1 className="font-serif text-2xl text-navy mb-2">Menorah Faith Chapel</h1>
-          <p className="text-sm text-foreground/60">A Light Unto the Nations</p>
+          <h1 className="font-serif text-2xl text-white mb-2">Menorah Faith Chapel</h1>
+          <p className="text-sm text-gold/80 tracking-wide">A Light Unto the Nations</p>
         </div>
       </div>
     );
@@ -52,6 +59,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white w-full overflow-x-hidden">
+      {/* Light cursor */}
+      <LightCursor />
+
       {/* Navigation */}
       <Navigation
         currentLang={currentLang}
