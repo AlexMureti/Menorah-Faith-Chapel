@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Play, Zap, ChevronLeft, ChevronRight } from 'lucide-react';
 import { site } from '../data/site';
+import { gsap, ScrollTrigger } from '../lib/motion';
 
 interface HeroProps {
   currentLang: string;
@@ -117,26 +118,69 @@ const slideShowMedia = [
 
 export default function Hero({ currentLang }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Cinematic intro + scroll parallax (Ken Burns on the backdrop).
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            observer.unobserve(entry.target);
-          }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const ctx = gsap.context(() => {
+      // Headline / scripture / CTAs rise in on load.
+      const items = gsap.utils.toArray<HTMLElement>('.fade-element', contentRef.current!);
+      if (reduce) {
+        gsap.set(items, { opacity: 1, y: 0 });
+      } else {
+        gsap.set(items, { opacity: 0, y: 28 });
+        gsap.to(items, {
+          opacity: 1,
+          y: 0,
+          duration: 1.1,
+          ease: 'power3.out',
+          stagger: 0.12,
+          delay: 0.15,
         });
-      },
-      { threshold: 0.1 }
-    );
+      }
 
-    const elements = sectionRef.current?.querySelectorAll('.fade-element');
-    elements?.forEach((el) => observer.observe(el));
+      // Backdrop drifts slower than scroll and gently scales — depth.
+      if (!reduce && bgRef.current) {
+        gsap.fromTo(
+          bgRef.current,
+          { yPercent: 0, scale: 1.08 },
+          {
+            yPercent: 16,
+            scale: 1.16,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: true,
+            },
+          }
+        );
+        // Foreground copy lifts away a touch as you scroll past.
+        gsap.to(contentRef.current, {
+          yPercent: -8,
+          opacity: 0.85,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      }
+    }, sectionRef);
 
-    return () => observer.disconnect();
+    const t = setTimeout(() => ScrollTrigger.refresh(), 300);
+    return () => {
+      clearTimeout(t);
+      ctx.revert();
+    };
   }, []);
 
   // Set playback speed for menorahs video
@@ -173,7 +217,7 @@ export default function Hero({ currentLang }: HeroProps) {
       {/* Main Hero with Slideshow Background */}
       <div className="relative min-h-screen overflow-hidden">
         {/* Slideshow Background */}
-        <div className="absolute inset-0 bg-navy">
+        <div ref={bgRef} className="absolute inset-0 bg-navy will-change-transform">
           {/* Slideshow Media */}
           <div className="relative w-full h-full">
             {slideShowMedia.map((media, index) => (
@@ -205,9 +249,16 @@ export default function Hero({ currentLang }: HeroProps) {
             ))}
           </div>
 
-          {/* Dark Overlay */}
+          {/* Dark Overlay + cinematic vignette */}
           <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/50 to-navy/70" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,18,51,0.65)_100%)]" />
         </div>
+
+        {/* Golden light bloom — "a light unto the nations" */}
+        <div className="pointer-events-none absolute -top-1/4 left-1/2 -translate-x-1/2 w-[80vw] h-[80vw] max-w-[900px] max-h-[900px] rounded-full bg-[radial-gradient(circle,rgba(255,215,0,0.18)_0%,rgba(255,215,0,0)_60%)] blur-2xl" />
+
+        {/* Film grain */}
+        <div className="grain absolute inset-0 pointer-events-none" />
 
         {/* Slideshow Controls */}
         <div className="absolute inset-x-0 bottom-6 sm:bottom-8 z-20 flex items-center justify-center gap-3">
@@ -246,7 +297,7 @@ export default function Hero({ currentLang }: HeroProps) {
         </div>
 
         {/* Content Container */}
-        <div className="relative z-10 h-full flex items-center py-16 sm:py-20 md:py-24 lg:py-32">
+        <div ref={contentRef} className="relative z-10 h-full flex items-center py-16 sm:py-20 md:py-24 lg:py-32 will-change-transform">
           <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12">
             <div className="max-w-4xl mx-auto">
               {/* Scripture Reference */}
@@ -328,7 +379,7 @@ export default function Hero({ currentLang }: HeroProps) {
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 gap-6">
               {/* Vision Card */}
-              <div className="fade-element opacity-0 bg-white border border-gold/30 p-6 md:p-8 rounded-sm shadow-lg hover:shadow-xl transition-all">
+              <div className="reveal bg-white border border-gold/30 p-6 md:p-8 rounded-sm shadow-lg hover:shadow-xl transition-all">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="flex-shrink-0">
                     <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gold/20">
@@ -349,7 +400,7 @@ export default function Hero({ currentLang }: HeroProps) {
               </div>
 
               {/* Dream Card */}
-              <div className="fade-element opacity-0 bg-white border border-covenant/30 p-6 md:p-8 rounded-sm shadow-lg hover:shadow-xl transition-all" style={{ animationDelay: '0.1s' }}>
+              <div className="reveal bg-white border border-covenant/30 p-6 md:p-8 rounded-sm shadow-lg hover:shadow-xl transition-all">
                 <div className="flex items-start gap-4 mb-4">
                   <div className="flex-shrink-0">
                     <div className="flex items-center justify-center h-12 w-12 rounded-full bg-covenant/20">

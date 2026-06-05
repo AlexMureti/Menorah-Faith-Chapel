@@ -25,7 +25,7 @@ function App() {
 
   // Buttery smooth scroll + scroll-triggered reveals across the page.
   useSmoothScroll();
-  useScrollReveal();
+  useScrollReveal(!isLoading);
 
   useEffect(() => {
     // Simulate initial load

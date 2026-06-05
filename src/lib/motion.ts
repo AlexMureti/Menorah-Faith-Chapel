@@ -39,10 +39,13 @@ export function useSmoothScroll() {
 /**
  * Reveal-on-scroll for any element carrying the `.reveal` class.
  * Batched so a stagger ripples through siblings as a group scrolls in.
- * Call once at the app root, after content is mounted.
+ * Pass `ready` so it scans the DOM only once the page content is mounted
+ * (e.g. after the intro loader clears).
  */
-export function useScrollReveal() {
+export function useScrollReveal(ready = true) {
   useEffect(() => {
+    if (!ready) return;
+
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const els = gsap.utils.toArray<HTMLElement>('.reveal');
@@ -73,7 +76,7 @@ export function useScrollReveal() {
       clearTimeout(t);
       batch.forEach((st) => st.kill());
     };
-  }, []);
+  }, [ready]);
 }
 
 export { gsap, ScrollTrigger };
