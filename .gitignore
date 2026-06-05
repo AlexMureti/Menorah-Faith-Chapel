@@ -27,3 +27,6 @@ Thumbs.db
 
 # Vite
 *.tsbuildinfo
+
+# Scratch
+_reels_tmp/

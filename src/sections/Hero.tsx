@@ -109,11 +109,16 @@ const content = {
   },
 };
 
+// Real ministry reels pulled from the Facebook page. They are black & white
+// at source — embraced here as a deliberate, timeless cinematic treatment,
+// warmed with a gold cast to sit on the navy + gold brand.
 const slideShowMedia = [
-  { type: 'image', src: '/slideshow/photo-1.jpeg', alt: 'Slide 1' },
-  { type: 'video', src: '/slideshow/menorahs.mp4', alt: 'Menorahs' },
-  { type: 'image', src: '/slideshow/photo-2.jpeg', alt: 'Slide 2' },
-  { type: 'video', src: '/slideshow/theme-video.mp4', alt: 'Theme' },
+  { type: 'video', src: '/media/reels/reel-1.mp4', alt: 'Menorah Faith Chapel ministry' },
+  { type: 'video', src: '/media/reels/reel-2.mp4', alt: 'Worship at Menorah Faith Chapel' },
+  { type: 'video', src: '/media/reels/reel-3.mp4', alt: 'Apostle Isaack Muriungi ministering' },
+  { type: 'video', src: '/media/reels/reel-4.mp4', alt: 'Prophetic ministry' },
+  { type: 'video', src: '/media/reels/reel-5.mp4', alt: 'The congregation in worship' },
+  { type: 'video', src: '/media/reels/reel-6.mp4', alt: 'Teaching the Word' },
 ];
 
 export default function Hero({ currentLang }: HeroProps) {
@@ -183,12 +188,11 @@ export default function Hero({ currentLang }: HeroProps) {
     };
   }, []);
 
-  // Set playback speed for menorahs video
+  // Gentle slow-motion across all reels for a reverent, cinematic cadence.
   useEffect(() => {
-    const video = videoRefs.current[1]; // menorahs.mp4 is at index 1
-    if (video) {
-      video.playbackRate = 0.5; // Half speed
-    }
+    videoRefs.current.forEach((video) => {
+      if (video) video.playbackRate = 0.85;
+    });
   }, []);
 
   // Auto-advance slideshow every 6 seconds
@@ -240,7 +244,9 @@ export default function Hero({ currentLang }: HeroProps) {
                     autoPlay
                     muted
                     loop
-                    className="w-full h-full object-cover"
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover grayscale contrast-[1.08] brightness-[0.95]"
                   >
                     <source src={media.src} type="video/mp4" />
                   </video>
@@ -248,6 +254,9 @@ export default function Hero({ currentLang }: HeroProps) {
               </div>
             ))}
           </div>
+
+          {/* Gold cast over the B&W footage — turns grayscale into brand-warm */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-navy/30 via-gold/15 to-navy/20 mix-blend-soft-light pointer-events-none" />
 
           {/* Dark Overlay + cinematic vignette */}
           <div className="absolute inset-0 bg-gradient-to-b from-navy/40 via-navy/50 to-navy/70" />
