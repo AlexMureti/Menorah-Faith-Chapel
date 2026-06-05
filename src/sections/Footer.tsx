@@ -1,5 +1,6 @@
 import { Phone, Mail, Globe, ChevronUp, Facebook, MapPin } from 'lucide-react';
 import { site } from '../data/site';
+import LogoSeal from '../components/LogoSeal';
 
 interface FooterProps {
   currentLang: string;
@@ -98,9 +99,7 @@ export default function Footer({ currentLang, onLangChange }: FooterProps) {
             <div className="lg:col-span-2">
               {/* Logo */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="relative w-12 h-12 flex items-center justify-center flex-shrink-0">
-                  <img src="/Menorah Logo.jpeg" alt="Menorah Faith Chapel Logo" className="w-full h-full object-contain" />
-                </div>
+                <LogoSeal size={48} />
                 <div>
                   <span className="font-serif text-lg text-white">Menorah Faith Chapel</span>
                   <span className="block text-[10px] uppercase tracking-[0.25em] text-gold">A Light Unto the Nations</span>

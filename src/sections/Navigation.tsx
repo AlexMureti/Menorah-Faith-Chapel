@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Globe, ChevronDown, Calendar } from 'lucide-react';
+import LogoSeal from '../components/LogoSeal';
 
 interface NavigationProps {
   currentLang: string;
@@ -69,8 +70,8 @@ export default function Navigation({ currentLang, onLangChange, onOpenBooking }:
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             >
-              <div className="relative w-12 h-12 flex items-center justify-center flex-shrink-0">
-                <img src="/Menorah Logo.jpeg" alt="Menorah Faith Chapel Logo" className="w-full h-full object-contain" />
+              <div className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                <LogoSeal size={44} />
               </div>
               <div className="hidden sm:block">
                 <span className="font-serif text-lg md:text-xl tracking-wide text-navy">
@@ -169,24 +170,7 @@ export default function Navigation({ currentLang, onLangChange, onOpenBooking }:
             {/* Mobile Header */}
             <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="relative w-8 h-8 flex items-center justify-center">
-                  <svg viewBox="0 0 100 100" className="w-full h-full">
-                    <defs>
-                      <linearGradient id="mobileMenorahGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#FFD700" />
-                        <stop offset="50%" stopColor="#FFF8DC" />
-                        <stop offset="100%" stopColor="#FFD700" />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M50 10 L50 25 M30 25 L70 25 M25 25 L25 40 M35 25 L35 40 M50 25 L50 45 M65 25 L65 40 M75 25 L75 40 M20 40 L80 40"
-                      stroke="url(#mobileMenorahGradient)"
-                      strokeWidth="3"
-                      fill="none"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
+                <LogoSeal size={32} still />
                 <span className="font-serif text-sm text-navy">Menorah Faith Chapel</span>
               </div>
               <button
