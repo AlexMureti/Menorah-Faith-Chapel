@@ -95,15 +95,15 @@ module.exports = {
           "20%,50%": { opacity: "0" },
         },
         "fade-in": {
-          from: { opacity: "0", transform: "translateY(10px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
+          from: { opacity: "0", transform: "translateY(26px) scale(0.985)", filter: "blur(4px)" },
+          to: { opacity: "1", transform: "translateY(0) scale(1)", filter: "blur(0)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
-        "fade-in": "fade-in 0.6s ease-out forwards",
+        "fade-in": "fade-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards",
       },
     },
   },

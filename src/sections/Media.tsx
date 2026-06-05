@@ -146,8 +146,8 @@ export default function Media({ currentLang }: MediaProps) {
   }, []);
 
   return (
-    <section id="media" ref={sectionRef} className="py-20 md:py-28 bg-navy text-white">
-      <div className="editorial-container">
+    <section id="media" ref={sectionRef} className="relative py-20 md:py-28 bg-navy text-white grain overflow-hidden">
+      <div className="editorial-container relative z-[2]">
         {/* Section Header */}
         <div className="flex items-center gap-3 mb-6 fade-element opacity-0">
           <span className="w-12 h-px bg-gold" />
