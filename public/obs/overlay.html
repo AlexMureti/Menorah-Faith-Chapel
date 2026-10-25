@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1920, initial-scale=1" />
+<title>Menorah Verse Overlay</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* OBS browser source: 1920x1080, transparent background. */
+  :root {
+    --navy: #002060;
+    --navy-dark: #001844;
+    --covenant: #C00000;
+    --gold: #FFD700;
+    --gold-soft: #F3D46B;
+    --ink: #FFFFFF;
+  }
+  html, body {
+    margin: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: transparent;
+    font-family: "Libre Baskerville", Georgia, serif;
+    color: var(--ink);
+  }
+  body.checker {
+    background-color: #2a2f3a;
+    background-image:
+      linear-gradient(45deg, #353b48 25%, transparent 25%),
+      linear-gradient(-45deg, #353b48 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #353b48 75%),
+      linear-gradient(-45deg, transparent 75%, #353b48 75%);
+    background-size: 60px 60px;
+    background-position: 0 0, 0 30px, 30px -30px, -30px 0;
+  }
+
+  .stage { position: absolute; inset: 0; }
+
+  /* ---------- Lower third ---------- */
+  .lower {
+    position: absolute;
+    left: 110px;
+    right: 110px;
+    bottom: 64px;
+    display: flex;
+    align-items: stretch;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity .45s ease, transform .55s cubic-bezier(.2,.8,.2,1);
+    filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+  }
+  .lower.on { opacity: 1; transform: none; }
+  .lower.top { top: 56px; bottom: auto; transform: translateY(-40px); }
+  .lower.top.on { transform: none; }
+
+  .seal {
+    flex: 0 0 auto;
+    width: 150px;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 50% 40%, #0a3a92, var(--navy-dark) 70%);
+    border-radius: 18px 0 0 18px;
+    border-top: 5px solid var(--gold);
+    position: relative;
+  }
+  .seal::after {
+    content: "";
+    position: absolute;
+    right: 0; top: 18px; bottom: 18px;
+    width: 3px;
+    background: linear-gradient(var(--covenant), #ff4b4b, var(--covenant));
+    border-radius: 2px;
+  }
+  .logo {
+    display: block;
+    border-radius: 50%;
+    box-shadow: 0 6px 18px rgba(0,0,0,.45);
+  }
+  .logo img { width: 100%; height: 100%; display: block; }
+  .seal .logo { width: 118px; height: 118px; }
+
+  .panel {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: linear-gradient(100deg, rgba(0,24,68,.96), rgba(0,32,96,.93) 60%, rgba(0,32,96,.88));
+    border-top: 5px solid var(--gold);
+    border-radius: 0 18px 18px 0;
+    padding: 26px 46px 30px 40px;
+    box-sizing: border-box;
+  }
+  .ref {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    font-size: 30px;
+    color: var(--gold);
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    margin-bottom: 12px;
+  }
+  .ref .tr {
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: .2em;
+    color: rgba(255,255,255,.6);
+  }
+  .text {
+    line-height: 1.38;
+    font-size: 46px;
+    text-wrap: pretty;
+    max-height: 260px;
+    overflow: hidden;
+  }
+  .text .vn {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 700;
+    color: var(--gold-soft);
+    font-size: .52em;
+    vertical-align: .55em;
+    margin: 0 .25em 0 .1em;
+  }
+
+  /* ---------- Name / title card ---------- */
+  .lower.card .panel { padding: 24px 46px 26px 40px; }
+  .lower.card { right: auto; max-width: 1300px; }
+  .lower.card .title {
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  .lower.card .subtitle {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 10px;
+  }
+
+  /* ---------- Full screen ---------- */
+  .full {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(10,58,146,.97), rgba(0,24,68,.98) 70%);
+    opacity: 0;
+    transition: opacity .6s ease;
+  }
+  .full.on { opacity: 1; }
+  .full .inner {
+    width: 1500px;
+    text-align: center;
+  }
+  .full .logo { width: 170px; height: 170px; margin: 0 auto 38px; }
+  .full .text {
+    font-size: 64px;
+    line-height: 1.42;
+    max-height: 620px;
+  }
+  .full .ref {
+    justify-content: center;
+    font-size: 34px;
+    margin: 44px 0 0;
+  }
+  .full .rule {
+    width: 180px;
+    height: 4px;
+    margin: 40px auto 0;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .swap { transition: opacity .25s ease; }
+  .swap.fading { opacity: 0; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="lower" id="lower">
+    <div class="seal"><span class="logo"><img src="menorah-seal.png" alt="" /></span></div>
+    <div class="panel swap" id="lowerPanel"></div>
+  </div>
+  <div class="full" id="full">
+    <div class="inner swap" id="fullInner"></div>
+  </div>
+</div>
+
+<script>
+  // Shows whatever the control panel (control.html) sends. Both pages must
+  // be opened from the same address, so they share BroadcastChannel and
+  // localStorage. ?channel=preview is used by the control panel's preview.
+  const params = new URLSearchParams(location.search);
+  const channelName = params.get('channel') === 'preview' ? 'menorah-verse-preview' : 'menorah-verse';
+  const storageKey = channelName + ':state';
+  if (params.has('checker')) document.body.classList.add('checker');
+
+  const lower = document.getElementById('lower');
+  const lowerPanel = document.getElementById('lowerPanel');
+  const full = document.getElementById('full');
+  const fullInner = document.getElementById('fullInner');
+
+  let lastTs = 0;
+
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function verseHtml(state) {
+    if (state.verses && state.verses.length > 1) {
+      return state.verses.map(v => `<span class="vn">${esc(v.n)}</span>${esc(v.t)}`).join(' ');
+    }
+    return esc(state.text);
+  }
+
+  // Shrink the font until the text fits its box.
+  function fit(el, max, min) {
+    let size = max;
+    el.style.fontSize = size + 'px';
+    const limit = parseFloat(getComputedStyle(el).maxHeight);
+    while (size > min && el.scrollHeight > limit + 1) {
+      size -= 2;
+      el.style.fontSize = size + 'px';
+    }
+  }
+
+  function render(state) {
+    const visible = !!state.visible;
+    const mode = state.mode || 'verse';
+    const layout = state.layout || 'lower';
+    const scale = Number(state.scale) || 1;
+
+    const showFull = visible && layout === 'full' && mode !== 'card';
+    const showLower = visible && !showFull;
+
+    const fill = () => {
+      if (mode === 'card') {
+        lower.classList.add('card');
+        lowerPanel.innerHTML =
+          `<div class="title">${esc(state.title)}</div>` +
+          (state.subtitle ? `<div class="subtitle">${esc(state.subtitle)}</div>` : '');
+      } else {
+        lower.classList.remove('card');
+        const refLine = `<div class="ref"><span>${esc(state.ref)}</span>${state.translation ? `<span class="tr">${esc(state.translation)}</span>` : ''}</div>`;
+        lowerPanel.innerHTML = refLine + `<div class="text">${verseHtml(state)}</div>`;
+        fullInner.innerHTML =
+          `<span class="logo"><img src="menorah-seal.png" alt="" /></span>` +
+          `<div class="text">${verseHtml(state)}</div>` +
+          refLine + `<div class="rule"></div>`;
+        const lt = lowerPanel.querySelector('.text');
+        const ft = fullInner.querySelector('.text');
+        if (lt) fit(lt, Math.round(46 * scale), 26);
+        if (ft) fit(ft, Math.round(64 * scale), 34);
+      }
+    };
+
+    lower.classList.toggle('top', state.position === 'top');
+
+    // Cross-fade the content when it changes while already on screen.
+    const wasOn = lower.classList.contains('on') || full.classList.contains('on');
+    if (wasOn && visible) {
+      lowerPanel.classList.add('fading');
+      fullInner.classList.add('fading');
+      setTimeout(() => {
+        fill();
+        lowerPanel.classList.remove('fading');
+        fullInner.classList.remove('fading');
+        lower.classList.toggle('on', showLower);
+        full.classList.toggle('on', showFull);
+      }, 230);
+    } else {
+      if (visible) fill();
+      lower.classList.toggle('on', showLower);
+      full.classList.toggle('on', showFull);
+    }
+  }
+
+  function receive(state) {
+    if (!state || (state.ts && state.ts < lastTs)) return;
+    lastTs = state.ts || Date.now();
+    render(state);
+  }
+
+  if ('BroadcastChannel' in window) {
+    new BroadcastChannel(channelName).onmessage = e => receive(e.data);
+  }
+  window.addEventListener('storage', e => {
+    if (e.key === storageKey && e.newValue) {
+      try { receive(JSON.parse(e.newValue)); } catch (_) {}
+    }
+  });
+
+  // Restore what was on screen if OBS reloads the source mid-service.
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (saved) {
+      const state = JSON.parse(saved);
+      document.fonts.ready.then(() => receive(state));
+    }
+  } catch (_) {}
+</script>
+</body>
+</html>

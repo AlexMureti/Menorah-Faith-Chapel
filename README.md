@@ -6,6 +6,10 @@ A single-page website for Menorah Faith Chapel, a church in Ngong, Embulbul, on 
 
 Deployed on Vercel: https://menorah-faith-chapel.vercel.app
 
+## Livestream verse overlay
+
+`public/obs/` holds a Bible verse and name-card overlay for the Sunday OBS livestream: `control.html` is the operator panel (docked inside OBS) and `overlay.html` is the browser source, with the KJV text in `kjv.json`. Setup, plus streaming to YouTube and Facebook at the same time, is in [docs/obs-livestream-guide.md](docs/obs-livestream-guide.md).
+
 ## Stack
 
 - React 19 and TypeScript, bundled by Vite 7

@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Menorah Verse Control</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="menorah-seal.png" />
+<style>
+  :root {
+    --navy: #002060;
+    --navy-dark: #001844;
+    --navy-2: #0b2a6b;
+    --covenant: #C00000;
+    --covenant-light: #E01414;
+    --gold: #FFD700;
+    --bg: #0d1424;
+    --panel: #151e33;
+    --panel-2: #1c2742;
+    --line: #2a3658;
+    --text: #e8ecf5;
+    --muted: #93a0bd;
+    --ok: #2fbf71;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 14px/1.45 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 12px;
+  }
+  h1 {
+    font: 700 16px/1.2 "Inter", system-ui, sans-serif;
+    letter-spacing: .06em;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h1 img { width: 30px; height: 30px; }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .pill {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .12em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  .pill.live { background: var(--covenant); color: #fff; border-color: var(--covenant-light); }
+
+  .layout { display: grid; gap: 12px; }
+  @media (min-width: 980px) {
+    .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  }
+  .col { display: grid; gap: 12px; min-width: 0; }
+
+  section, details {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  details > summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+  }
+  details > summary::before { content: "▸ "; color: var(--gold); }
+  details[open] > summary::before { content: "▾ "; }
+  details[open] > summary { margin-bottom: 10px; }
+  .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+
+  input[type=text], textarea, select {
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 10px;
+    font: inherit;
+  }
+  input[type=text]:focus, textarea:focus, select:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+  textarea { resize: vertical; min-height: 70px; }
+  #ref { font-size: 18px; font-weight: 600; }
+
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .row > .grow { flex: 1 1 160px; min-width: 0; }
+
+  button {
+    font: 600 14px/1 "Inter", system-ui, sans-serif;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--muted); }
+  button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: var(--navy-2); border-color: #2c4c96; }
+  button.go {
+    background: var(--covenant);
+    border-color: var(--covenant-light);
+    color: #fff;
+    font-size: 16px;
+    padding: 14px 18px;
+    flex: 1 1 auto;
+  }
+  button.hide { font-size: 16px; padding: 14px 18px; flex: 1 1 auto; }
+  button.small { padding: 6px 10px; font-size: 12px; }
+
+  .error { color: #ff8c8c; min-height: 1.2em; margin-top: 6px; font-size: 13px; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+  .slides {
+    display: grid;
+    gap: 6px;
+    max-height: 300px;
+    overflow: auto;
+    margin-top: 10px;
+  }
+  .slide {
+    text-align: left;
+    font: 400 14px/1.4 Georgia, serif;
+    padding: 9px 10px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .slide b {
+    font: 700 11px/1 "Inter", system-ui, sans-serif;
+    color: var(--gold);
+    letter-spacing: .08em;
+    margin-right: 6px;
+  }
+  .slide.sel { border-color: var(--gold); background: #1f2a47; }
+  .slide.onair { box-shadow: inset 4px 0 0 var(--covenant); }
+
+  .preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #000;
+  }
+  .preview iframe {
+    position: absolute;
+    left: 0; top: 0;
+    width: 1920px;
+    height: 1080px;
+    border: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+  }
+
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; padding: 8px 12px; background: var(--bg); }
+  .seg button.on { background: var(--navy-2); color: #fff; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    padding: 7px 10px;
+    font-size: 13px;
+    background: var(--bg);
+  }
+  .chip.card { border-color: #5a4a10; }
+  .chip .x { color: var(--muted); margin-left: 6px; }
+
+  kbd {
+    font: 600 11px/1 "Inter", system-ui, sans-serif;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  label.check { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); font-size: 13px; }
+  input[type=range] { accent-color: var(--gold); }
+</style>
+</head>
+<body>
+<header>
+  <h1><img src="menorah-seal.png" alt="" /> MENORAH VERSE CONTROL</h1>
+  <span class="pill" id="status">OFF AIR</span>
+</header>
+
+<div class="layout">
+  <div class="col">
+    <section>
+      <p class="label">Scripture</p>
+      <div class="row">
+        <input type="text" id="ref" class="grow" placeholder="e.g. John 3:16, Ps 23, Rom 8:28-31" autocomplete="off" spellcheck="false" />
+        <select id="translation" style="width:auto"></select>
+        <button class="primary" id="loadBtn">Find</button>
+      </div>
+      <div class="error" id="refError"></div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="combine" /> Show a short passage as one slide</label>
+      </div>
+      <div class="slides" id="slides"></div>
+    </section>
+
+    <section>
+      <p class="label">Service plan</p>
+      <textarea id="plan" placeholder="One reference per line, typed before the service.&#10;Isaiah 60:1-3&#10;Matthew 5:14&#10;John 8:12"></textarea>
+      <div class="chips" id="planChips"></div>
+    </section>
+
+    <details>
+      <summary>Name card (speaker, sermon title)</summary>
+      <div class="row">
+        <input type="text" id="cardTitle" class="grow" placeholder="Apostle Isaack Muriungi" />
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input type="text" id="cardSub" class="grow" placeholder="Senior Pastor" />
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="primary" id="cardPreview">Preview</button>
+        <button id="cardSave">Save for next time</button>
+      </div>
+      <div class="chips" id="cardChips"></div>
+    </details>
+
+    <details>
+      <summary>Type a verse by hand (another translation)</summary>
+      <div class="row">
+        <input type="text" id="manualRef" class="grow" placeholder="Yohana 3:16" />
+        <input type="text" id="manualTr" style="width:90px" placeholder="SUV" />
+      </div>
+      <textarea id="manualText" style="margin-top:8px" placeholder="Paste or type the verse text"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="primary" id="manualPreview">Preview</button>
+      </div>
+    </details>
+
+    <details>
+      <summary>Add a Bible translation</summary>
+      <p class="hint" style="margin-top:0">
+        Load a JSON file with all 66 books, in the format
+        <code>[["Genesis", [["verse 1", "verse 2", …], …]], …]</code>
+        or <code>[{"name": "Genesis", "chapters": [[…]]}, …]</code>.
+        It is kept in this browser only. Use a translation the church has the right to show.
+      </p>
+      <div class="row">
+        <input type="text" id="trName" style="width:110px" placeholder="Short name" />
+        <input type="file" id="trFile" accept=".json,application/json" class="grow" />
+      </div>
+      <div class="error" id="trError"></div>
+      <div class="chips" id="trChips"></div>
+    </details>
+  </div>
+
+  <div class="col">
+    <section>
+      <p class="label">Preview</p>
+      <div class="preview" id="previewBox">
+        <iframe id="previewFrame" src="overlay.html?channel=preview&amp;checker" title="Preview"></iframe>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="prevBtn" title="Previous (←)">◀ Prev</button>
+        <button class="go" id="goBtn" title="Show on stream (Enter)">SHOW ON STREAM</button>
+        <button class="hide" id="hideBtn" title="Hide (Esc)">HIDE</button>
+        <button id="nextBtn" title="Next (→)">Next ▶</button>
+      </div>
+      <p class="hint">
+        <kbd>Enter</kbd> show · <kbd>Esc</kbd> hide · <kbd>←</kbd> <kbd>→</kbd> previous / next verse (goes straight to stream while showing) ·
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> in the search box finds and shows at once
+      </p>
+    </section>
+
+    <section>
+      <p class="label">Look</p>
+      <div class="row">
+        <div class="seg" id="layoutSeg">
+          <button data-v="lower">Lower third</button>
+          <button data-v="full">Full screen</button>
+        </div>
+        <div class="seg" id="posSeg">
+          <button data-v="bottom">Bottom</button>
+          <button data-v="top">Top</button>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <span class="hint" style="margin:0">Text size</span>
+        <input type="range" id="scale" min="0.7" max="1.3" step="0.05" class="grow" />
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  const LIVE = 'menorah-verse';
+  const PREVIEW = 'menorah-verse-preview';
+  const SETTINGS = 'menorah-verse:settings';
+
+  const $ = id => document.getElementById(id);
+  const live = 'BroadcastChannel' in window ? new BroadcastChannel(LIVE) : null;
+  const preview = 'BroadcastChannel' in window ? new BroadcastChannel(PREVIEW) : null;
+
+  // ---------- settings ----------
+  const defaults = {
+    translation: 'KJV', layout: 'lower', position: 'bottom', scale: 1,
+    combine: true, plan: '', cards: [{ title: 'Apostle Isaack Muriungi', subtitle: 'Menorah Faith Chapel' }],
+  };
+  let settings = { ...defaults };
+  try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS) || '{}')); } catch (_) {}
+  const save = () => { try { localStorage.setItem(SETTINGS, JSON.stringify(settings)); } catch (_) {} };
+
+  // ---------- bibles ----------
+  const bibles = {};          // name -> [[bookName, chapters], ...]
+  const BOOKS_EN = [];        // canonical English names, for matching
+
+  function normalizeBible(data) {
+    if (data && Array.isArray(data.books)) data = data.books;
+    if (!Array.isArray(data) || data.length !== 66) throw new Error('Expected 66 books, found ' + (Array.isArray(data) ? data.length : 'none') + '.');
+    return data.map((b, i) => {
+      const name = Array.isArray(b) ? b[0] : b.name;
+      const chapters = Array.isArray(b) ? b[1] : b.chapters;
+      if (!name || !Array.isArray(chapters) || !chapters.length) throw new Error('Book ' + (i + 1) + ' is missing a name or chapters.');
+      return [String(name), chapters];
+    });
+  }
+
+  function db() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('menorah-verse', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('bibles');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  }
+  async function dbDo(mode, fn) {
+    const d = await db();
+    return new Promise((res, rej) => {
+      const tx = d.transaction('bibles', mode);
+      const out = fn(tx.objectStore('bibles'));
+      tx.oncomplete = () => res(out && out.result);
+      tx.onerror = () => rej(tx.error);
+    });
+  }
+
+  // ---------- reference parsing ----------
+  const ALIASES = {
+    gen: 0, ge: 0, gn: 0, ex: 1, exo: 1, exod: 1, lev: 2, lv: 2, num: 3, nm: 3, nb: 3, deut: 4, dt: 4, de: 4,
+    josh: 5, jos: 5, judg: 6, jdg: 6, jg: 6, ru: 7, rth: 7,
+    '1sam': 8, '1sa': 8, '1s': 8, '2sam': 9, '2sa': 9, '2s': 9, '1ki': 10, '1kgs': 10, '1k': 10, '2ki': 11, '2kgs': 11, '2k': 11,
+    '1chr': 12, '1ch': 12, '2chr': 13, '2ch': 13, ezr: 14, neh: 15, ne: 15, est: 16, esth: 16, jb: 17,
+    ps: 18, psa: 18, psm: 18, pss: 18, psalm: 18, prov: 19, pr: 19, prv: 19, eccl: 20, ecc: 20, ec: 20, qoh: 20,
+    song: 21, sos: 21, ss: 21, sng: 21, canticles: 21, songofsongs: 21, isa: 22, is: 22, jer: 23, je: 23, lam: 24, la: 24,
+    ezek: 25, eze: 25, ezk: 25, dan: 26, dn: 26, da: 26, hos: 27, ho: 27, jl: 28, am: 29, ob: 30, obad: 30, jon: 31, jnh: 31,
+    mic: 32, mc: 32, nah: 33, na: 33, hab: 34, zeph: 35, zep: 35, hag: 36, hg: 36, zech: 37, zec: 37, mal: 38, ml: 38,
+    mt: 39, matt: 39, mat: 39, mk: 40, mrk: 40, mar: 40, lk: 41, luk: 41, jn: 42, jhn: 42, joh: 42, ac: 43, act: 43,
+    rom: 44, rm: 44, ro: 44, '1cor': 45, '1co': 45, '2cor': 46, '2co': 46, gal: 47, ga: 47, eph: 48, phil: 49, php: 49, pp: 49,
+    col: 50, '1th': 51, '1thess': 51, '1thes': 51, '2th': 52, '2thess': 52, '2thes': 52, '1tim': 53, '1ti': 53, '2tim': 54, '2ti': 54,
+    tit: 55, ti: 55, phlm: 56, phm: 56, philem: 56, heb: 57, jas: 58, jm: 58, '1pet': 59, '1pe': 59, '1pt': 59, '1p': 59,
+    '2pet': 60, '2pe': 60, '2pt': 60, '2p': 60, '1jn': 61, '1jo': 61, '1jhn': 61, '2jn': 62, '2jo': 62, '3jn': 63, '3jo': 63,
+    jud: 64, jude: 64, jd: 64, rev: 65, re: 65, rv: 65, revelations: 65, apocalypse: 65,
+  };
+  const key = s => s.toLowerCase().replace(/[.\s]/g, '');
+
+  function findBook(raw) {
+    let s = raw.trim().toLowerCase()
+      .replace(/^(first|1st)\s+/, '1 ').replace(/^(second|2nd)\s+/, '2 ').replace(/^(third|3rd)\s+/, '3 ')
+      .replace(/^iii\s+/, '3 ').replace(/^ii\s+/, '2 ').replace(/^i\s+/, '1 ');
+    const k = key(s);
+    if (!k) return -1;
+    if (k in ALIASES) return ALIASES[k];
+    const nameLists = [BOOKS_EN, ...Object.values(bibles).map(b => b.map(x => x[0]))];
+    for (const list of nameLists) {
+      const i = list.findIndex(n => key(n) === k);
+      if (i >= 0) return i;
+    }
+    if (k.length >= 2) {
+      for (const list of nameLists) {
+        const i = list.findIndex(n => key(n).startsWith(k));
+        if (i >= 0) return i;
+      }
+    }
+    return -1;
+  }
+
+  function parseRef(input) {
+    const m = input.trim().match(/^(.+?)\s*(\d+)(?:(?:\s*[:.,]\s*|\s+)(\d+)(?:\s*[-–—]\s*(\d+))?)?\s*$/);
+    if (!m) return { error: 'Type a book and chapter, like John 3:16 or Psalm 23.' };
+    const [, book, ch, v1, v2] = m;
+    const bookIdx = findBook(book);
+    if (bookIdx < 0) return { error: `Could not find the book "${book.trim()}".` };
+    return { bookIdx, chapter: +ch, from: v1 ? +v1 : null, to: v2 ? +v2 : (v1 ? +v1 : null) };
+  }
+
+  // ---------- passage & slides ----------
+  let passage = null;   // { tr, bookIdx, bookName, chapter, verses: [{n, t}] }
+  let slides = [];      // [{ ref, translation, verses: [{n,t}], text }]
+  let current = -1;
+  let onAir = -1;       // slide index on stream, or -1
+  let isLive = false;
+  let previewState = null;
+  let lastSent = null;
+
+  function lookup(text) {
+    const r = parseRef(text);
+    if (r.error) return r;
+    const tr = settings.translation in bibles ? settings.translation : 'KJV';
+    const bible = bibles[tr];
+    if (!bible) return { error: 'The Bible is still loading. Try again in a moment.' };
+    const [bookName, chapters] = bible[r.bookIdx];
+    const chapter = chapters[r.chapter - 1];
+    if (!chapter) return { error: `${bookName} has ${chapters.length} chapter${chapters.length > 1 ? 's' : ''}.` };
+    let from = r.from || 1;
+    let to = r.to || chapter.length;
+    if (from > chapter.length) return { error: `${bookName} ${r.chapter} has ${chapter.length} verses.` };
+    if (to < from) [from, to] = [to, from];
+    to = Math.min(to, chapter.length);
+    const verses = [];
+    for (let n = from; n <= to; n++) verses.push({ n, t: chapter[n - 1] });
+    return { tr, bookIdx: r.bookIdx, bookName, chapter: r.chapter, verses };
+  }
+
+  function buildSlides() {
+    if (!passage) { slides = []; return; }
+    const { tr, bookName, chapter, verses } = passage;
+    const total = verses.reduce((a, v) => a + v.t.length, 0);
+    if (settings.combine && verses.length > 1 && verses.length <= 4 && total <= 360) {
+      slides = [{
+        ref: `${bookName} ${chapter}:${verses[0].n}–${verses[verses.length - 1].n}`,
+        translation: tr, verses, text: verses.map(v => v.t).join(' '),
+      }];
+    } else {
+      slides = verses.map(v => ({ ref: `${bookName} ${chapter}:${v.n}`, translation: tr, verses: [v], text: v.t }));
+    }
+  }
+
+  function load(text, { show = false } = {}) {
+    $('refError').textContent = '';
+    const res = lookup(text);
+    if (res.error) { $('refError').textContent = res.error; return false; }
+    passage = res;
+    buildSlides();
+    onAir = -1;
+    select(0, { push: false });
+    if (show) goLive();
+    return true;
+  }
+
+  function renderSlides() {
+    const box = $('slides');
+    box.innerHTML = '';
+    slides.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.className = 'slide' + (i === current ? ' sel' : '') + (i === onAir && isLive ? ' onair' : '');
+      const label = s.verses.length > 1 ? s.ref.split(' ').pop() : s.verses[0].n;
+      b.innerHTML = `<b>${label}</b>`;
+      b.appendChild(document.createTextNode(s.text));
+      b.onclick = () => select(i, { push: false });
+      b.ondblclick = () => { select(i, { push: false }); goLive(); };
+      box.appendChild(b);
+    });
+    const sel = box.children[current];
+    if (sel) sel.scrollIntoView({ block: 'nearest' });
+  }
+
+  function look() {
+    return { layout: settings.layout, position: settings.position, scale: settings.scale };
+  }
+
+  function stateFor(slide) {
+    return { mode: 'verse', ref: slide.ref, translation: slide.translation, verses: slide.verses, text: slide.text, ...look() };
+  }
+
+  function setPreview(state) {
+    previewState = state;
+    send(PREVIEW, preview, { ...state, visible: !!state });
+    updateButtons();
+  }
+
+  // push: if already showing on stream, send the new slide straight there.
+  function select(i, { push }) {
+    if (!slides.length) return;
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    setPreview(stateFor(slides[current]));
+    if (push && isLive) goLive();
+    renderSlides();
+  }
+
+  // ---------- sending ----------
+  function send(name, ch, state) {
+    const msg = { ...state, ts: Date.now() };
+    if (ch) ch.postMessage(msg);
+    try { localStorage.setItem(name + ':state', JSON.stringify(msg)); } catch (_) {}
+    return msg;
+  }
+
+  function goLive() {
+    if (!previewState) return;
+    lastSent = send(LIVE, live, { ...previewState, ...look(), visible: true });
+    isLive = true;
+    onAir = previewState.mode === 'verse' ? current : -1;
+    updateStatus();
+    renderSlides();
+  }
+
+  function hide() {
+    lastSent = send(LIVE, live, { ...(lastSent || {}), visible: false });
+    isLive = false;
+    onAir = -1;
+    updateStatus();
+    renderSlides();
+  }
+
+  function updateStatus() {
+    const s = $('status');
+    s.textContent = isLive ? 'ON STREAM' : 'OFF AIR';
+    s.classList.toggle('live', isLive);
+  }
+
+  function updateButtons() {
+    $('goBtn').disabled = !previewState;
+    $('prevBtn').disabled = !(previewState && previewState.mode === 'verse' && current > 0);
+    $('nextBtn').disabled = !(previewState && previewState.mode === 'verse' && current < slides.length - 1);
+  }
+
+  // Look changes apply to the preview, and to the stream if it is showing.
+  function applyLook() {
+    if (previewState) setPreview({ ...previewState, ...look() });
+    if (isLive && lastSent) lastSent = send(LIVE, live, { ...lastSent, ...look() });
+    document.querySelectorAll('#layoutSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === settings.layout));
+    document.querySelectorAll('#posSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === settings.position));
+  }
+
+  // ---------- service plan ----------
+  function renderPlan() {
+    const box = $('planChips');
+    box.innerHTML = '';
+    settings.plan.split('\n').map(s => s.trim()).filter(Boolean).forEach(line => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = line;
+      b.onclick = () => { $('ref').value = line; load(line); };
+      box.appendChild(b);
+    });
+  }
+
+  // ---------- name cards ----------
+  function previewCard(title, subtitle) {
+    if (!title.trim()) return;
+    current = -1;
+    renderSlides();
+    setPreview({ mode: 'card', title: title.trim(), subtitle: subtitle.trim(), ...look() });
+  }
+
+  function renderCards() {
+    const box = $('cardChips');
+    box.innerHTML = '';
+    settings.cards.forEach((c, i) => {
+      const b = document.createElement('button');
+      b.className = 'chip card';
+      b.textContent = c.title + (c.subtitle ? ' · ' + c.subtitle : '');
+      const x = document.createElement('span');
+      x.className = 'x';
+      x.textContent = '✕';
+      x.title = 'Remove';
+      x.onclick = e => { e.stopPropagation(); settings.cards.splice(i, 1); save(); renderCards(); };
+      b.appendChild(x);
+      b.onclick = () => { $('cardTitle').value = c.title; $('cardSub').value = c.subtitle; previewCard(c.title, c.subtitle); };
+      box.appendChild(b);
+    });
+  }
+
+  // ---------- translations ----------
+  function renderTranslations() {
+    const sel = $('translation');
+    sel.innerHTML = '';
+    Object.keys(bibles).forEach(name => {
+      const o = document.createElement('option');
+      o.value = o.textContent = name;
+      sel.appendChild(o);
+    });
+    if (!(settings.translation in bibles)) settings.translation = 'KJV';
+    sel.value = settings.translation;
+
+    const box = $('trChips');
+    box.innerHTML = '';
+    Object.keys(bibles).filter(n => n !== 'KJV').forEach(name => {
+      const b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = name + ' ✕';
+      b.title = 'Remove from this browser';
+      b.onclick = async () => {
+        await dbDo('readwrite', s => s.delete(name));
+        delete bibles[name];
+        renderTranslations();
+      };
+      box.appendChild(b);
+    });
+  }
+
+  $('trFile').onchange = async e => {
+    $('trError').textContent = '';
+    const file = e.target.files[0];
+    if (!file) return;
+    const name = $('trName').value.trim().toUpperCase() || file.name.replace(/\.json$/i, '').toUpperCase().slice(0, 10);
+    try {
+      const data = normalizeBible(JSON.parse((await file.text()).replace(/^﻿/, '')));
+      await dbDo('readwrite', s => s.put(data, name));
+      bibles[name] = data;
+      settings.translation = name;
+      save();
+      renderTranslations();
+      $('trName').value = '';
+      e.target.value = '';
+    } catch (err) {
+      $('trError').textContent = 'Could not load that file: ' + err.message;
+    }
+  };
+
+  // ---------- wiring ----------
+  $('loadBtn').onclick = () => load($('ref').value);
+  $('ref').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      load($('ref').value, { show: e.ctrlKey || e.metaKey });
+    }
+  });
+  $('translation').onchange = e => {
+    settings.translation = e.target.value;
+    save();
+    if (passage) {
+      const keep = current;
+      const r = lookup(`${BOOKS_EN[passage.bookIdx]} ${passage.chapter}:${passage.verses[0].n}-${passage.verses[passage.verses.length - 1].n}`);
+      if (!r.error) { passage = r; buildSlides(); select(Math.min(keep, slides.length - 1), { push: false }); }
+    }
+  };
+  $('combine').onchange = e => {
+    settings.combine = e.target.checked;
+    save();
+    if (passage) { buildSlides(); select(0, { push: false }); }
+  };
+  $('plan').oninput = e => { settings.plan = e.target.value; save(); renderPlan(); };
+
+  $('goBtn').onclick = goLive;
+  $('hideBtn').onclick = hide;
+  $('prevBtn').onclick = () => select(current - 1, { push: true });
+  $('nextBtn').onclick = () => select(current + 1, { push: true });
+
+  document.querySelectorAll('#layoutSeg button').forEach(b => b.onclick = () => { settings.layout = b.dataset.v; save(); applyLook(); });
+  document.querySelectorAll('#posSeg button').forEach(b => b.onclick = () => { settings.position = b.dataset.v; save(); applyLook(); });
+  $('scale').oninput = e => { settings.scale = +e.target.value; save(); applyLook(); };
+
+  $('cardPreview').onclick = () => previewCard($('cardTitle').value, $('cardSub').value);
+  $('cardSave').onclick = () => {
+    const title = $('cardTitle').value.trim();
+    if (!title) return;
+    settings.cards.push({ title, subtitle: $('cardSub').value.trim() });
+    save();
+    renderCards();
+  };
+  $('manualPreview').onclick = () => {
+    const text = $('manualText').value.trim();
+    if (!text) return;
+    current = -1;
+    renderSlides();
+    setPreview({ mode: 'verse', ref: $('manualRef').value.trim(), translation: $('manualTr').value.trim(), text, ...look() });
+  };
+
+  document.addEventListener('keydown', e => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
+    if (e.key === 'Escape') { e.preventDefault(); hide(); return; }
+    if (typing) return;
+    if (e.key === 'Enter') { e.preventDefault(); goLive(); }
+    else if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key)) { e.preventDefault(); select(current + 1, { push: true }); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); select(current - 1, { push: true }); }
+  });
+
+  // Scale the 1920x1080 preview to its box.
+  const frame = $('previewFrame');
+  new ResizeObserver(([entry]) => {
+    frame.style.transform = `scale(${entry.contentRect.width / 1920})`;
+  }).observe($('previewBox'));
+
+  // ---------- start ----------
+  $('combine').checked = settings.combine;
+  $('plan').value = settings.plan;
+  $('scale').value = settings.scale;
+  renderPlan();
+  renderCards();
+  applyLook();
+  updateButtons();
+
+  // Pick up the stream's current state, so a reloaded panel knows what is showing.
+  try {
+    const saved = JSON.parse(localStorage.getItem(LIVE + ':state') || 'null');
+    if (saved) { lastSent = saved; isLive = !!saved.visible; updateStatus(); }
+  } catch (_) {}
+
+  fetch('kjv.json')
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(data => {
+      bibles.KJV = normalizeBible(data);
+      BOOKS_EN.push(...bibles.KJV.map(b => b[0]));
+      return dbDo('readonly', s => s.getAllKeys()).then(async keys => {
+        for (const k of keys || []) bibles[k] = await dbDo('readonly', s => s.get(k));
+      }).catch(() => {});
+    })
+    .then(() => { renderTranslations(); $('ref').focus(); })
+    .catch(err => { $('refError').textContent = 'Could not load the Bible (' + err.message + '). Check the internet connection and reload.'; });
+})();
+</script>
+</body>
+</html>
