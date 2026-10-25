@@ -183,7 +183,7 @@ export default function Events({ currentLang }: EventsProps) {
 
               {/* Menorah Decoration */}
               <div className="mt-8 pt-8 border-t border-white/20">
-                <img src="/Menorah Logo.jpeg" alt="Menorah Logo" className="w-12 h-12 opacity-40 object-contain" />
+                <img src="/menorah-seal.png" alt="Menorah Faith Chapel logo" className="w-12 h-12 opacity-40 object-contain" />
               </div>
             </div>
           </div>

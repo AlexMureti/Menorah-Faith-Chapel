@@ -23,7 +23,7 @@ export default function LogoSeal({ size = 96, className = '', still = false }: L
       <span className="logo-seal__sheen" />
       <span className="logo-seal__core">
         <img
-          src="/Menorah Logo Transparent.png"
+          src="/menorah-seal.png"
           alt=""
           className="logo-seal__img"
           draggable={false}

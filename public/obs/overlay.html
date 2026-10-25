@@ -185,7 +185,7 @@
 <body>
 <div class="stage">
   <div class="lower" id="lower">
-    <div class="seal"><span class="logo"><img src="menorah-seal.png" alt="" /></span></div>
+    <div class="seal"><span class="logo"><img src="/menorah-seal.png" alt="" /></span></div>
     <div class="panel swap" id="lowerPanel"></div>
   </div>
   <div class="full" id="full">
@@ -251,7 +251,7 @@
         const refLine = `<div class="ref"><span>${esc(state.ref)}</span>${state.translation ? `<span class="tr">${esc(state.translation)}</span>` : ''}</div>`;
         lowerPanel.innerHTML = refLine + `<div class="text">${verseHtml(state)}</div>`;
         fullInner.innerHTML =
-          `<span class="logo"><img src="menorah-seal.png" alt="" /></span>` +
+          `<span class="logo"><img src="/menorah-seal.png" alt="" /></span>` +
           `<div class="text">${verseHtml(state)}</div>` +
           refLine + `<div class="rule"></div>`;
         const lt = lowerPanel.querySelector('.text');

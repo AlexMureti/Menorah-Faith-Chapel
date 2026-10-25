@@ -245,7 +245,7 @@
 
 .logo-seal__core {
   position: absolute;
-  inset: 10%;
+  inset: 6%;
   border-radius: 9999px;
   display: grid;
   place-items: center;
@@ -255,8 +255,8 @@
 }
 
 .logo-seal__img {
-  width: 74%;
-  height: 74%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
 }
