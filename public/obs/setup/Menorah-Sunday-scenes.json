@@ -1,0 +1,244 @@
+{
+  "name": "Menorah Sunday",
+  "current_scene": "Service",
+  "current_program_scene": "Service",
+  "scene_order": [
+    {
+      "name": "Service"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Camera",
+      "uuid": "3954f14e-ce9a-4199-899a-f0bb187ac62c",
+      "id": "dshow_input",
+      "versioned_id": "dshow_input",
+      "settings": {
+        "active": true,
+        "res_type": 0
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-talk": false,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {}
+    },
+    {
+      "name": "Church Mixer",
+      "uuid": "913aaee1-a397-4b2d-9bc9-d9e2f800328b",
+      "id": "wasapi_input_capture",
+      "versioned_id": "wasapi_input_capture",
+      "settings": {
+        "device_id": "default"
+      },
+      "mixers": 255,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-talk": false,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {}
+    },
+    {
+      "name": "Verses",
+      "uuid": "a10d95f5-6633-4c93-9060-e5c4ce2b4678",
+      "id": "browser_source",
+      "versioned_id": "browser_source",
+      "settings": {
+        "url": "https://menorah-faith-chapel.vercel.app/obs/overlay.html",
+        "width": 1920,
+        "height": 1080,
+        "fps": 30,
+        "shutdown": false,
+        "restart_when_active": false,
+        "reroute_audio": false,
+        "css": ""
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-talk": false,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {}
+    },
+    {
+      "name": "Service",
+      "uuid": "825f5acd-7794-4318-a913-7b49e67f2bb9",
+      "id": "scene",
+      "versioned_id": "scene",
+      "settings": {
+        "custom_size": false,
+        "id_counter": 4,
+        "items": [
+          {
+            "name": "Camera",
+            "source_uuid": "3954f14e-ce9a-4199-899a-f0bb187ac62c",
+            "visible": true,
+            "locked": true,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "alignment": 5,
+            "bounds_type": 2,
+            "bounds_alignment": 0,
+            "bounds": {
+              "x": 1920.0,
+              "y": 1080.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 1,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {}
+          },
+          {
+            "name": "Church Mixer",
+            "source_uuid": "913aaee1-a397-4b2d-9bc9-d9e2f800328b",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "alignment": 5,
+            "bounds_type": 0,
+            "bounds_alignment": 0,
+            "bounds": {
+              "x": 1920.0,
+              "y": 1080.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 2,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {}
+          },
+          {
+            "name": "Verses",
+            "source_uuid": "a10d95f5-6633-4c93-9060-e5c4ce2b4678",
+            "visible": true,
+            "locked": false,
+            "rot": 0.0,
+            "pos": {
+              "x": 0.0,
+              "y": 0.0
+            },
+            "scale": {
+              "x": 1.0,
+              "y": 1.0
+            },
+            "alignment": 5,
+            "bounds_type": 0,
+            "bounds_alignment": 0,
+            "bounds": {
+              "x": 1920.0,
+              "y": 1080.0
+            },
+            "crop_left": 0,
+            "crop_top": 0,
+            "crop_right": 0,
+            "crop_bottom": 0,
+            "id": 3,
+            "group_item_backup": false,
+            "scale_filter": "disable",
+            "blend_method": "default",
+            "blend_type": "normal",
+            "show_transition": {
+              "duration": 0
+            },
+            "hide_transition": {
+              "duration": 0
+            },
+            "private_settings": {}
+          }
+        ]
+      },
+      "mixers": 0,
+      "sync": 0,
+      "flags": 0,
+      "volume": 1.0,
+      "balance": 0.5,
+      "enabled": true,
+      "muted": false,
+      "push-to-mute": false,
+      "push-to-talk": false,
+      "hotkeys": {},
+      "deinterlace_mode": 0,
+      "deinterlace_field_order": 0,
+      "monitoring_type": 0,
+      "private_settings": {}
+    }
+  ],
+  "groups": [],
+  "transitions": [],
+  "current_transition": "Fade",
+  "transition_duration": 300,
+  "quick_transitions": [],
+  "saved_projectors": [],
+  "preview_locked": false,
+  "scaling_enabled": false,
+  "scaling_level": 0,
+  "scaling_off_x": 0.0,
+  "scaling_off_y": 0.0,
+  "virtual-camera": {
+    "type2": 3
+  },
+  "modules": {}
+}

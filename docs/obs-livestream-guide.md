@@ -18,7 +18,29 @@ The overlay is two web pages that ship with the church website:
 
 The King James Version is built in, so verse lookup needs no outside service.
 
+### Quick setup: import the ready-made OBS files (Windows)
+
+Two files on the website set most of this up for you:
+
+- **Scene collection**: https://menorah-faith-chapel.vercel.app/obs/setup/Menorah-Sunday-scenes.json
+  This gives you a *Service* scene with the camera, the church mixer audio and the *Verses* overlay already stacked in the right order.
+- **Profile**: https://menorah-faith-chapel.vercel.app/obs/setup/Menorah-Sunday-profile.zip
+  It holds a 1080p canvas, 720p 30 fps output, 3000 kbps CBR with 2-second keyframes, 48 kHz audio, and YouTube (RTMPS) with an empty stream key.
+
+1. Download both. Unzip the profile, which gives a folder called `Menorah Sunday`.
+2. In OBS: **Profile → Import**, then choose the `Menorah Sunday` folder. Switch to it under **Profile**.
+3. **Scene Collection → Import**, choose `Menorah-Sunday-scenes.json`, tick it, click Import, then pick it under **Scene Collection**.
+4. Double-click **Camera** and pick your camera. Double-click **Church Mixer** and pick the sound card or USB interface the mixer is plugged into.
+5. *Settings → Stream*: paste the YouTube stream key.
+6. Add the control panel dock: step 2 under *One-time setup* below.
+7. For Facebook as well, install the plugin in Part 2, Option A.
+
+On a Mac, delete the *Camera* and *Church Mixer* sources after importing and add them again with **+ → Video Capture Device** and **+ → Audio Input Capture**.
+
 ### One-time setup in OBS (OBS Studio 28 or newer)
+
+If you used the quick setup, you only need step 2 here.
+
 
 1. **Add the overlay to your scene**
    - In the *Sources* box, click **+** → **Browser**, and name it `Verses`.
