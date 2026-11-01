@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Live Invite</title>
+<style>
+  :root {
+    --navy-900: #050b24;
+    --navy-800: #0a1640;
+    --navy-700: #12245e;
+    --gold-300: #f6dc8c;
+    --gold-400: #e9c45e;
+    --gold-500: #c9992e;
+    --red-500: #e0252f;
+    --ink-100: #eef1fb;
+    --ink-300: #b8c1e0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--navy-900); }
+  body { font-family: "Inter", "Liberation Sans", sans-serif; color: var(--ink-100); }
+
+  .card {
+    position: relative; overflow: hidden;
+    width: var(--w); height: var(--h);
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 30%, rgba(233,196,94,.22), transparent 70%),
+      radial-gradient(ellipse 90% 60% at 50% 110%, rgba(18,36,94,.9), transparent 70%),
+      linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  /* soft light rays behind the seal */
+  .card::before {
+    content: ""; position: absolute; inset: -20%;
+    background: repeating-conic-gradient(from 0deg at 50% var(--ray-y),
+      rgba(246,220,140,.07) 0deg 4deg, transparent 4deg 14deg);
+    -webkit-mask: radial-gradient(circle at 50% var(--ray-y), #000 0, transparent 55%);
+            mask: radial-gradient(circle at 50% var(--ray-y), #000 0, transparent 55%);
+  }
+  /* gold frame */
+  .card::after {
+    content: ""; position: absolute; inset: var(--frame);
+    border: 2px solid rgba(233,196,94,.55); border-radius: 18px; pointer-events: none;
+    box-shadow: inset 0 0 0 8px rgba(233,196,94,.08);
+  }
+  .inner { position: relative; z-index: 1; height: 100%; width: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    padding: var(--pad); }
+
+  .seal { width: var(--seal); height: var(--seal); border-radius: 50%;
+    filter: drop-shadow(0 0 40px rgba(233,196,94,.45)) drop-shadow(0 10px 30px rgba(0,0,0,.6)); }
+
+  .live { display: inline-flex; align-items: center; gap: .55em;
+    background: var(--red-500); color: #fff; font-weight: 800; letter-spacing: .18em;
+    font-size: var(--live-fs); padding: .45em 1.1em .45em .9em; border-radius: 999px;
+    box-shadow: 0 0 0 6px rgba(224,37,47,.22), 0 8px 24px rgba(224,37,47,.45); }
+  .live i { width: .62em; height: .62em; border-radius: 50%; background: #fff;
+    box-shadow: 0 0 0 .2em rgba(255,255,255,.35); }
+
+  .eyebrow { font-family: "Liberation Serif", serif; letter-spacing: .32em; text-transform: uppercase;
+    color: var(--gold-300); font-size: var(--eyebrow-fs); }
+  h1 { font-family: "Liberation Serif", "DejaVu Serif", serif; font-weight: 700; line-height: .95;
+    font-size: var(--h1-fs); letter-spacing: .01em;
+    background: linear-gradient(180deg, #fff6d6 0%, var(--gold-300) 35%, var(--gold-400) 60%, var(--gold-500) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 4px 14px rgba(0,0,0,.55)); }
+  .sub { font-size: var(--sub-fs); font-weight: 600; color: var(--ink-100); }
+  .sub b { color: var(--gold-300); font-weight: 700; }
+  .rule { width: 34%; height: 2px; margin: 0 auto;
+    background: linear-gradient(90deg, transparent, var(--gold-400), transparent); }
+  .theme { font-size: var(--theme-fs); color: var(--ink-300); line-height: 1.4; max-width: 30em; }
+  .theme em { font-style: normal; color: var(--gold-300); font-weight: 600; }
+
+  .cta { display: flex; align-items: center; gap: var(--cta-gap); text-align: left;
+    background: rgba(5,11,36,.65); border: 1.5px solid rgba(233,196,94,.45);
+    border-radius: 22px; padding: var(--cta-pad); }
+  .qr { width: var(--qr); height: var(--qr); background: #fff; border-radius: 12px; padding: 8px; }
+  .qr img { width: 100%; height: 100%; display: block; }
+  .cta .k { font-size: var(--cta-k); text-transform: uppercase; letter-spacing: .2em; color: var(--gold-300); font-weight: 700; }
+  .cta .v { font-size: var(--cta-v); font-weight: 800; margin: .15em 0 .2em; }
+  .cta .u { font-size: var(--cta-u); color: var(--ink-300); font-family: "JetBrains Mono", monospace; }
+  .yt { display: inline-block; vertical-align: -0.12em; width: 1.35em; height: .95em; margin-right: .35em;
+    background: #ff0000; border-radius: .22em; position: relative; }
+  .yt::after { content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-35%,-50%);
+    border-left: .38em solid #fff; border-top: .23em solid transparent; border-bottom: .23em solid transparent; }
+
+  .foot { font-size: var(--foot-fs); color: var(--ink-300); letter-spacing: .04em; }
+  .foot strong { color: var(--ink-100); letter-spacing: .14em; text-transform: uppercase; font-weight: 700; }
+  .foot .tag { font-family: "Liberation Serif", serif; font-style: italic; color: var(--gold-300); }
+
+  .stack { display: flex; flex-direction: column; align-items: center; gap: var(--gap); }
+
+  /* ---------- sizes ---------- */
+  .square { --w:1080px; --h:1080px; --pad:70px 80px 64px; --frame:26px; --ray-y:22%;
+    --seal:250px; --live-fs:24px; --eyebrow-fs:22px; --h1-fs:112px; --sub-fs:32px; --theme-fs:22px;
+    --qr:150px; --cta-gap:28px; --cta-pad:18px 30px 18px 18px; --cta-k:17px; --cta-v:32px; --cta-u:19px;
+    --foot-fs:20px; --gap:20px; }
+  .story { --w:1080px; --h:1920px; --pad:150px 80px 130px; --frame:30px; --ray-y:20%;
+    --seal:400px; --live-fs:34px; --eyebrow-fs:30px; --h1-fs:168px; --sub-fs:44px; --theme-fs:30px;
+    --qr:230px; --cta-gap:36px; --cta-pad:26px 40px 26px 26px; --cta-k:22px; --cta-v:44px; --cta-u:24px;
+    --foot-fs:28px; --gap:34px; }
+  .wide { --w:1280px; --h:720px; --pad:52px 70px; --frame:20px; --ray-y:50%; --frame:20px;
+    --seal:330px; --live-fs:20px; --eyebrow-fs:18px; --h1-fs:96px; --sub-fs:26px; --theme-fs:17px;
+    --qr:120px; --cta-gap:22px; --cta-pad:14px 24px 14px 14px; --cta-k:14px; --cta-v:26px; --cta-u:15px;
+    --foot-fs:16px; --gap:16px; }
+  .wide .card::before { -webkit-mask: radial-gradient(circle at 24% 50%, #000 0, transparent 45%);
+                                mask: radial-gradient(circle at 24% 50%, #000 0, transparent 45%); }
+  .wide .inner { flex-direction: row; justify-content: flex-start; gap: 60px; }
+  .wide .left { display: flex; flex-direction: column; align-items: center; gap: 22px; flex: 0 0 auto; }
+  .wide .right { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 16px; }
+  .wide .rule { margin: 0; width: 60%; background: linear-gradient(90deg, var(--gold-400), transparent); }
+</style>
+</head>
+<body>
+<script>
+  const size = new URLSearchParams(location.search).get('size') || 'square';
+  document.body.className = size;
+  const seal = '<img class="seal" src="menorah-seal.png" alt="Menorah Faith Chapel seal">';
+  const live = '<span class="live"><i></i>LIVE</span>';
+  const heading = `
+    <div class="eyebrow">You are invited</div>
+    <h1>Join Us Live</h1>
+    <div class="sub">Sunday Service with${size==='story'?'<br>':' '}<b>Apostle Isaack Muriungi</b></div>`;
+  const theme = `<div class="theme">2026 &middot; <em>Divine Favour, Supernatural Momentum,<br>Increase &amp; Establishment</em></div>`;
+  const cta = `
+    <div class="cta">
+      <div class="qr"><img src="qr.svg" alt=""></div>
+      <div>
+        <div class="k">Scan or tap to watch</div>
+        <div class="v"><span class="yt"></span>Watch on YouTube</div>
+        <div class="u">youtube.com/live/OZiFyIFwTUk</div>
+      </div>
+    </div>`;
+  const foot = `<div class="foot"><strong>Menorah Faith Chapel</strong> &middot; Ngong, Embulbul<br><span class="tag">A Light unto the Nations &middot; Zech. 4:6</span></div>`;
+
+  let html;
+  if (size === 'wide') {
+    html = `<div class="card"><div class="inner">
+      <div class="left">${seal}${live}</div>
+      <div class="right">${heading}<div class="rule"></div>${theme}${cta}</div>
+    </div></div>`;
+  } else {
+    html = `<div class="card"><div class="inner">
+      <div class="stack">${seal}${live}</div>
+      <div class="stack">${heading}<div class="rule"></div>${theme}</div>
+      <div class="stack">${cta}${foot}</div>
+    </div></div>`;
+  }
+  document.write(html);
+</script>
+</body>
+</html>
